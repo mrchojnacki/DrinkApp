@@ -9,5 +9,8 @@
         <module name="DrinkApp" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Spring01hibernate" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
