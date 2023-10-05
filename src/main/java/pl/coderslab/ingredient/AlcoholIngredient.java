@@ -1,8 +1,12 @@
-package pl.coderslab.drink;
+package pl.coderslab.ingredient;
+
+import pl.coderslab.drink.Drink;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "alcohol_ingredients")
@@ -12,6 +16,7 @@ public class AlcoholIngredient {
     private Long id;
     private String alcoholType;
     private int volumeMillilitres;
+    //private double price;
     @ManyToMany(mappedBy = "alcoholIngredients")
     List<Drink> drinks = new ArrayList<>();
 

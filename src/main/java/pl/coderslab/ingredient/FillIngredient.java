@@ -1,4 +1,6 @@
-package pl.coderslab.drink;
+package pl.coderslab.ingredient;
+
+import pl.coderslab.drink.Drink;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -10,8 +12,9 @@ public class FillIngredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    String fill;
-    String amount;
+    private String fill;
+    private String amount;
+    // private Double price;
 
     @ManyToMany(mappedBy = "fillIngredients")
     private List<Drink> drinkList = new ArrayList<>();
