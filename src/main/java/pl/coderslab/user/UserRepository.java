@@ -1,6 +1,9 @@
 package pl.coderslab.user;
 
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -14,32 +17,9 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class UserRepository {
-    @PersistenceContext
-    private EntityManager entityManager;
-    public User findUserById(Long id) {
-        return entityManager.find(User.class, id);
-    }
-    public List<User> getAllUsers() {
-        return entityManager.createQuery("select u from User u", User.class).getResultList();
-    }
-    public void createNewUser(User user){
-        entityManager.persist(user);
-    }
-    public User updateUser(User user) {
-        return entityManager.merge(user);
-    }
-    public void deleteUser(Long id){
-        entityManager.remove(findUserById(id));
-    }
-    public User authenticate(String loginMethod, String password) {
-        User authenticatedUser = entityManager.createQuery("select u from User u where email =:loginMethod or userName =:loginMethod", User.class)
-                .setParameter("loginMethod", loginMethod)
-                .getSingleResult();
-        String hashedPassword = authenticatedUser.getPassword();
-        if (BCrypt.checkpw(password, hashedPassword)) {
-            return authenticatedUser;
-        }
-        return null;
-    }
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    @Query("select u from User u where u.email =:loginMethod or u.userName =:loginMethod")
+    public User findUserToAuthenticate(@Param("loginMethod") String loginMethod);
+
 }

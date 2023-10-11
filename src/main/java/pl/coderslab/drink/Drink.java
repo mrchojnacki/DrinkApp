@@ -1,8 +1,10 @@
 package pl.coderslab.drink;
 
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import pl.coderslab.ingredient.AlcoholIngredient;
 import pl.coderslab.ingredient.FillIngredient;
+import pl.coderslab.rating.RatingEntity;
 import pl.coderslab.user.User;
 
 import javax.persistence.*;
@@ -18,30 +20,36 @@ public class Drink {
     private Long id;
     private String name;
     private String method;
-    private Double rating;
-    private Long ratingCount;
     private LocalDateTime createdOn;
     private LocalDateTime lastUpdatedOn;
 
     @ManyToMany(mappedBy = "favDrinks")
+    @Cascade(CascadeType.SAVE_UPDATE)
     private List<User> userFavList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
+    @Cascade(CascadeType.SAVE_UPDATE)
     @JoinTable(name = "drinks_alcohol_ingredients",
     joinColumns = @JoinColumn(name = "drink_id"),
     inverseJoinColumns = @JoinColumn(name = "alcohol_ingredient_id"))
     private List<AlcoholIngredient> alcoholIngredients;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
+    @Cascade(CascadeType.SAVE_UPDATE)
     @JoinTable(name = "drinks_fill_ingredients",
     joinColumns = @JoinColumn(name = "drink_id"),
     inverseJoinColumns = @JoinColumn(name = "fill_ingredient_id"))
     private List<FillIngredient> fillIngredients;
+
+    @OneToOne
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinColumn(name = "rating_id", unique=true)
+    private RatingEntity rating;
 
     public Drink() {
     }
@@ -72,22 +80,6 @@ public class Drink {
 
     public void setMethod(String method) {
         this.method = method;
-    }
-
-    public Double getRating() {
-        return rating;
-    }
-
-    public void setRating(Double rating) {
-        this.rating = rating;
-    }
-
-    public Long getRatingCount() {
-        return ratingCount;
-    }
-
-    public void setRatingCount(Long ratingCount) {
-        this.ratingCount = ratingCount;
     }
 
     public LocalDateTime getCreatedOn() {
@@ -136,5 +128,13 @@ public class Drink {
 
     public void setFillIngredients(List<FillIngredient> fillIngredients) {
         this.fillIngredients = fillIngredients;
+    }
+
+    public RatingEntity getRating() {
+        return rating;
+    }
+
+    public void setRating(RatingEntity rating) {
+        this.rating = rating;
     }
 }

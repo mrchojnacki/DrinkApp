@@ -5,6 +5,7 @@ import pl.coderslab.ingredient.AlcoholIngredient;
 import pl.coderslab.ingredient.AlcoholIngredientRepository;
 import pl.coderslab.ingredient.FillIngredient;
 import pl.coderslab.ingredient.FillerIngredientRepository;
+import pl.coderslab.rating.RatingEntity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,10 +27,12 @@ public class DrinkService {
 
     public Drink addDrinkToDb(DrinkRequestDTO drinkRequestDTOFromController) {
         Drink newDrink = new Drink();
+        RatingEntity ratingEntity = new RatingEntity();
         newDrink.setName(drinkRequestDTOFromController.getName());
         newDrink.setMethod(drinkRequestDTOFromController.getMethod());
-        newDrink.setRating(0d);
-        newDrink.setRatingCount(0L);
+        ratingEntity.setCount(0);
+        ratingEntity.setSumOfRatings(0L);
+        newDrink.setRating(ratingEntity);
         //userId
         List<AlcoholIngredient> existingAlcoholList = searchForAlcoholIngredientsFromGivenIds(drinkRequestDTOFromController.getExistingAlcoholIngredients());
         List<AlcoholIngredient> alcoholIngredientList = drinkRequestDTOFromController.getAlcoholIngredients();

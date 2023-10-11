@@ -1,8 +1,10 @@
 package pl.coderslab.user;
 
+import org.hibernate.annotations.Cascade;
 import pl.coderslab.drink.Drink;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,11 @@ public class User {
     private String userName;
     private String email;
     private String password;
+    private LocalDateTime createdOn;
+    private LocalDateTime lastUpdatedOn;
+
+    //private String paymentMethod;
+
 
     @ManyToMany
     @JoinTable(name = "users_drinks",
@@ -22,10 +29,19 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<Drink> favDrinks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     List<Drink> userMadeDrinks = new ArrayList<>();
 
     public User() {
+    }
+    @PrePersist
+    public void prePersist() {
+        createdOn = LocalDateTime.now();
+    }
+    @PreUpdate
+    public void preUpdate() {
+        lastUpdatedOn = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -38,6 +54,22 @@ public class User {
 
     public void setUserName(String name) {
         this.userName = name;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public LocalDateTime getLastUpdatedOn() {
+        return lastUpdatedOn;
+    }
+
+    public void setLastUpdatedOn(LocalDateTime lastUpdatedOn) {
+        this.lastUpdatedOn = lastUpdatedOn;
     }
 
     public String getEmail() {
