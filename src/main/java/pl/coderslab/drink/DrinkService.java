@@ -30,7 +30,7 @@ public class DrinkService {
         RatingEntity ratingEntity = new RatingEntity();
         newDrink.setName(drinkRequestDTOFromController.getName());
         newDrink.setMethod(drinkRequestDTOFromController.getMethod());
-        ratingEntity.setCount(0);
+        ratingEntity.setRatingCount(0);
         ratingEntity.setSumOfRatings(0L);
         newDrink.setRating(ratingEntity);
         //userId

@@ -12,7 +12,7 @@ public class RatingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int count;
+    private int ratingCount;
     private Long sumOfRatings;
 
     @Formula("case when count = 0 then 0 else sumOfRatings / count end")
@@ -21,12 +21,12 @@ public class RatingEntity {
     public RatingEntity() {
     }
 
-    public int getCount() {
-        return count;
+    public int getRatingCount() {
+        return ratingCount;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setRatingCount(int count) {
+        this.ratingCount = count;
     }
 
     public Long getSumOfRatings() {
