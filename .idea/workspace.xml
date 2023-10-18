@@ -9,22 +9,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="14c3497a-0ca1-4234-ab64-09888a4c33a6" name="Changes" comment="User Repo + User Service + Rating Entity">
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/user/UserController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/sql/data.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/sql/insert.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/app-add-recipe.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/app_recipe_edit.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/css/styles.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/header.jsp" afterDir="false" />
+    <list default="true" id="14c3497a-0ca1-4234-ab64-09888a4c33a6" name="Changes" comment="SQL + adding/removing to fav list + getting usermade/favlist">
+      <change afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/comments/CommentEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/comments/CommentsRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/rating/RatingRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/user/UserLoggingDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/drinks/list-of-drinks.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/drinks/show-drink.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/landing-page.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/user/edit-password.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/user/myAccount.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/user/register.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/webContexts.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webContexts.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/coderslab/app/AppConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/app/AppConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/coderslab/drink/Drink.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/drink/Drink.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/coderslab/drink/DrinkController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/drink/DrinkController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/coderslab/drink/DrinkRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/drink/DrinkRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/coderslab/drink/DrinkService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/drink/DrinkService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/coderslab/ingredient/AlcoholIngredient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/ingredient/AlcoholIngredient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/coderslab/ingredient/FillIngredient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/ingredient/FillIngredient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/coderslab/rating/RatingEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/rating/RatingEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/coderslab/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/user/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/coderslab/user/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/user/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/coderslab/user/UserRegisterDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/user/UserRegisterDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/coderslab/user/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/user/UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/coderslab/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/user/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/sql/data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/sql/data.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/dashboard.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,8 +49,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Jsp File" />
+        <option value="Interface" />
         <option value="Class" />
+        <option value="Jsp File" />
       </list>
     </option>
   </component>
@@ -98,6 +114,8 @@
       <recent name="$PROJECT_DIR$/src/main/resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/webapp/drinks" />
+      <recent name="$PROJECT_DIR$/src/main/webapp/user" />
       <recent name="$PROJECT_DIR$/src/main/webapp/resources" />
       <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="$PROJECT_DIR$/src/main/webapp/htmls" />
@@ -109,7 +127,7 @@
       <deployment>
         <artifact name="DrinkApp:war exploded">
           <settings>
-            <option name="CONTEXT_PATH" value="/" />
+            <option name="CONTEXT_PATH" value="" />
           </settings>
         </artifact>
       </deployment>
@@ -210,7 +228,11 @@
       <workItem from="1696773083168" duration="1942000" />
       <workItem from="1697005120141" duration="12164000" />
       <workItem from="1697119036028" duration="5549000" />
-      <workItem from="1697175992476" duration="17445000" />
+      <workItem from="1697175992476" duration="17502000" />
+      <workItem from="1697266942446" duration="14066000" />
+      <workItem from="1697387023090" duration="2556000" />
+      <workItem from="1697480490306" duration="20612000" />
+      <workItem from="1697641955119" duration="7807000" />
     </task>
     <task id="LOCAL-00001" summary="pierwszy raz">
       <created>1695034259905</created>
@@ -247,7 +269,14 @@
       <option name="project" value="LOCAL" />
       <updated>1697037580759</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="SQL + adding/removing to fav list + getting usermade/favlist">
+      <created>1697194996310</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1697194996310</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -270,6 +299,7 @@
     <MESSAGE value="Tworzenie bazy danych" />
     <MESSAGE value="Drink Controller + Ingredient Service" />
     <MESSAGE value="User Repo + User Service + Rating Entity" />
-    <option name="LAST_COMMIT_MESSAGE" value="User Repo + User Service + Rating Entity" />
+    <MESSAGE value="SQL + adding/removing to fav list + getting usermade/favlist" />
+    <option name="LAST_COMMIT_MESSAGE" value="SQL + adding/removing to fav list + getting usermade/favlist" />
   </component>
 </project>

@@ -20,6 +20,9 @@ import java.util.List;
 @Transactional
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    @Query("select u from User u where u.id =:id")
+    public User findUserById(@Param("id") Long id);
+
     @Query("select u from User u where u.email =:loginMethod or u.userName =:loginMethod")
     public User findUserToAuthenticate(@Param("loginMethod") String loginMethod);
 

@@ -2,6 +2,7 @@ package pl.coderslab.drink;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import pl.coderslab.comments.CommentEntity;
 import pl.coderslab.ingredient.AlcoholIngredient;
 import pl.coderslab.ingredient.FillIngredient;
 import pl.coderslab.rating.RatingEntity;
@@ -47,10 +48,13 @@ public class Drink {
     inverseJoinColumns = @JoinColumn(name = "fill_ingredient_id"))
     private List<FillIngredient> fillIngredients;
 
-    @OneToOne
-    @Cascade(CascadeType.SAVE_UPDATE)
-    @JoinColumn(name = "rating_id", unique=true)
-    private RatingEntity rating;
+    @OneToMany(mappedBy = "drink")
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    List<RatingEntity> listOfRatings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "drink")
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    List<CommentEntity> listOfDrinkComments = new ArrayList<>();
 
     public Drink() {
     }
@@ -123,6 +127,14 @@ public class Drink {
         this.alcoholIngredients = alcoholIngredients;
     }
 
+    public List<CommentEntity> getListOfDrinkComments() {
+        return listOfDrinkComments;
+    }
+
+    public void setListOfDrinkComments(List<CommentEntity> listOfDrinkComments) {
+        this.listOfDrinkComments = listOfDrinkComments;
+    }
+
     public List<FillIngredient> getFillIngredients() {
         return fillIngredients;
     }
@@ -131,11 +143,11 @@ public class Drink {
         this.fillIngredients = fillIngredients;
     }
 
-    public RatingEntity getRating() {
-        return rating;
+    public List<RatingEntity> getListOfRatings() {
+        return listOfRatings;
     }
 
-    public void setRating(RatingEntity rating) {
-        this.rating = rating;
+    public void setListOfRatings(List<RatingEntity> listOfRatings) {
+        this.listOfRatings = listOfRatings;
     }
 }

@@ -1,9 +1,12 @@
 package pl.coderslab.user;
 
 import org.hibernate.annotations.Cascade;
+import pl.coderslab.comments.CommentEntity;
 import pl.coderslab.drink.Drink;
+import pl.coderslab.rating.RatingEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +18,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String userName;
+    @Email
     private String email;
+
     private String password;
     private LocalDateTime createdOn;
     private LocalDateTime lastUpdatedOn;
@@ -32,6 +37,14 @@ public class User {
     @OneToMany(mappedBy = "user")
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     List<Drink> userMadeDrinks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    List<CommentEntity> listOfUserComments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    List<RatingEntity> listOfRatings = new ArrayList<>();
 
     public User() {
     }
@@ -102,5 +115,21 @@ public class User {
 
     public void setUserMadeDrinks(List<Drink> userMadeDrinks) {
         this.userMadeDrinks = userMadeDrinks;
+    }
+
+    public List<CommentEntity> getListOfUserComments() {
+        return listOfUserComments;
+    }
+
+    public void setListOfUserComments(List<CommentEntity> listOfUserComments) {
+        this.listOfUserComments = listOfUserComments;
+    }
+
+    public List<RatingEntity> getListOfRatings() {
+        return listOfRatings;
+    }
+
+    public void setListOfRatings(List<RatingEntity> listOfRatings) {
+        this.listOfRatings = listOfRatings;
     }
 }

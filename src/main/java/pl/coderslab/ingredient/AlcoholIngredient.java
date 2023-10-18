@@ -50,4 +50,9 @@ public class AlcoholIngredient {
     public void setVolumeMillilitres(int volumeMillilitres) {
         this.volumeMillilitres = volumeMillilitres;
     }
+
+    @Override
+    public String toString() {
+        return alcoholType + ", " + volumeMillilitres;
+    }
 }

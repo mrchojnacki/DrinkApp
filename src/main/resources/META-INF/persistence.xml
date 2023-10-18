@@ -11,12 +11,13 @@
             <property name="javax.persistence.jdbc.password" value="coderslab"/>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="javax.persistence.sql-load-script-source"
-                      value="src/main/resources/META-INF/sql/data.sql" />
+                      value="sql/data.sql" />
             <property name="javax.persistence.schema-generation.database.action"
                       value="drop-and-create"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.import_files_sql_extractor" value="org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor" />
             <property name="hibernate.dialect"
                       value="org.hibernate.dialect.MySQL57Dialect" />
             <property name="hibernate.connection.characterEncoding" value="utf8" />        </properties>

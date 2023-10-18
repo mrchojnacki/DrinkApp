@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.*;
 import pl.coderslab.ingredient.*;
 import pl.coderslab.user.UserRepository;
 
+import javax.servlet.http.Part;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/drink")
 @Transactional
 public class DrinkController {
     private DrinkService drinkService;
@@ -24,12 +24,26 @@ public class DrinkController {
         this.ingredientService = ingredientService;
     }
 
+    @GetMapping("/")
+    public String landingPage() {
+        return "/landing-page.jsp";
+    }
+
 
     @GetMapping("/list")
-    @ResponseBody
     public String listAllDrinkFromDb(Model model) {
-        model.addAttribute("listOfAllDrinks", drinkService.getDrinkResponseDTOList());
-        return "lista";
+        model.addAttribute("pageOfDrinks", drinkService.getPagedDrinkResponseDTOList("1"));
+        model.addAttribute("noOfPages", drinkService.getPagedDrinkResponseDTOList("1").getTotalPages());
+        model.addAttribute("pageNumber", 1);
+        return "/drinks/list-of-drinks.jsp";
+    }
+
+    @GetMapping("/list/page/{pageNumber}")
+    public String nextPageOfDrinks(Model model, @PathVariable String pageNumber) {
+        model.addAttribute("pageOfDrinks", drinkService.getPagedDrinkResponseDTOList(pageNumber));
+        model.addAttribute("noOfPages", drinkService.getPagedDrinkResponseDTOList("1").getTotalPages());
+        model.addAttribute("pageNumber", Integer.parseInt(pageNumber));
+        return "/drinks/list-of-drinks.jsp";
     }
 
     /*    localhost:8080/add/drink/malibu/zrobdrinka/5/malibu/200   */
@@ -63,7 +77,6 @@ public class DrinkController {
     }
 
     @PostMapping("/addNewDrink")
-    @ResponseBody
     public String createNewDrink(@RequestParam String name,
                                  @RequestParam String method,
                                  @RequestParam String[] existingAlcoholIds,
@@ -71,7 +84,8 @@ public class DrinkController {
                                  @RequestParam String[] newAlcoholName,
                                  @RequestParam String[] newAlcoholVolume,
                                  @RequestParam String[] newFillName,
-                                 @RequestParam String[] newFillAmount) {
+                                 @RequestParam String[] newFillAmount,
+                                 @RequestParam Part image) {
         List<AlcoholIngredient> newAlcoholIngredients = castingNewAlcoholIngredients(newAlcoholName, newAlcoholVolume);
         List<FillIngredient> newFillIngredients = castingNewFillIngredients(newFillName, newFillAmount);
         DrinkRequestDTO drinkRequestDTO = new DrinkRequestDTO(
@@ -82,7 +96,8 @@ public class DrinkController {
                 existingAlcoholIds,
                 existingFillIds);
         drinkService.addDrinkToDb(drinkRequestDTO);
-        return "udało sie!"; //"redirect:drink/list;
+        drinkService.saveImageToDirectory(image, name);
+        return "/list"; //"redirect:drink/list;
     }
 
     private List<AlcoholIngredient> castingNewAlcoholIngredients (String[] newAlcoholName, String [] newAlcoholVolume) {

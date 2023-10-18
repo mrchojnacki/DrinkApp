@@ -8,18 +8,20 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 import javax.persistence.EntityManagerFactory;
+import javax.validation.Validator;
 
 @Configuration
 @EnableWebMvc
 @ComponentScan("pl.coderslab")
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "pl.coderslab.user")
+@EnableJpaRepositories(basePackages = "pl.coderslab")
 public class AppConfig implements WebMvcConfigurer {
     @Bean
     public LocalEntityManagerFactoryBean entityManagerFactory() {
@@ -36,6 +38,10 @@ public class AppConfig implements WebMvcConfigurer {
     public void configureDefaultServletHandling(
             DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
+    }
+    @Bean
+    public Validator validator() {
+        return new LocalValidatorFactoryBean();
     }
 
 }

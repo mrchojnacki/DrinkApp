@@ -1,21 +1,27 @@
-package pl.coderslab.rating;
+package pl.coderslab.comments;
 
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.Formula;
 import pl.coderslab.drink.Drink;
 import pl.coderslab.user.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name= "Ratings")
-public class RatingEntity {
-
+@Table(name = "Comments")
+public class CommentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long valueOfRating;
+    @Column(columnDefinition="TEXT")
+    private String commentContent;
+    private Long noOfLikes;
+    private LocalDateTime createdOn;
 
+    @PrePersist
+    public void prePersist() {
+        createdOn = LocalDateTime.now();
+    }
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "user_id")
@@ -26,15 +32,27 @@ public class RatingEntity {
     @JoinColumn(name = "drink_id")
     private Drink drink;
 
-    public RatingEntity() {
+    public CommentEntity() {
     }
 
-    public Long getValueOfRating() {
-        return valueOfRating;
+    public Long getId() {
+        return id;
     }
 
-    public void setValueOfRating(Long valueOfRating) {
-        this.valueOfRating = valueOfRating;
+    public String getCommentContent() {
+        return commentContent;
+    }
+
+    public void setCommentContent(String commentContent) {
+        this.commentContent = commentContent;
+    }
+
+    public Long getNoOfLikes() {
+        return noOfLikes;
+    }
+
+    public void setNoOfLikes(Long noOfLikes) {
+        this.noOfLikes = noOfLikes;
     }
 
     public User getUser() {
@@ -51,9 +69,5 @@ public class RatingEntity {
 
     public void setDrink(Drink drink) {
         this.drink = drink;
-    }
-
-    public Long getId() {
-        return id;
     }
 }

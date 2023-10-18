@@ -51,4 +51,9 @@ public class FillIngredient {
     public void setDrinkList(List<Drink> drinkList) {
         this.drinkList = drinkList;
     }
+
+    @Override
+    public String toString() {
+        return fill + ", " + amount;
+    }
 }
