@@ -4,25 +4,29 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import pl.coderslab.drink.Drink;
-import pl.coderslab.drink.DrinkRepository;
 import pl.coderslab.drink.DrinkResponseDTO;
+import pl.coderslab.drink.DrinkService;
+
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
-    private DrinkRepository drinkRepository;
+    private final UserRepository userRepository;
+    private final DrinkService drinkService;
 
-    public UserService(UserRepository userRepository, DrinkRepository drinkRepository) {
+    public UserService(UserRepository userRepository, DrinkService drinkService) {
         this.userRepository = userRepository;
-        this.drinkRepository = drinkRepository;
+        this.drinkService = drinkService;
+    }
+
+    public User findUserById(Long id) {
+        return userRepository.findUserById(id);
     }
 
     public void addUserToDb(UserRegisterDTO userRegisterDTOFromController,
@@ -40,42 +44,27 @@ public class UserService {
         userRepository.save(newUser);
     }
     public boolean checkIfPasswordConfirmed(UserRegisterDTO userRegisterDTO) {
-        boolean confirmedSuccessfully = false;
-        if (userRegisterDTO.getPassword().equals(userRegisterDTO.getPasswordConfirmation())) {
-            confirmedSuccessfully = true;
-        }
-        return confirmedSuccessfully;
+        return userRegisterDTO.getPassword().equals(userRegisterDTO.getPasswordConfirmation());
     }
 
-    List<DrinkResponseDTO> getFavoriteDrinkResponseDTO(Long userId) {
-        List<Drink> favoriteDrinkOfUser = userRepository.findFavoriteDrinkListOfUser(userId);
-        List<DrinkResponseDTO> favoriteDrinksResponseDTO = new ArrayList<>();
-        for (Drink drink : favoriteDrinkOfUser) {
-            favoriteDrinksResponseDTO.add(new DrinkResponseDTO(drink.getId(),
-                    drink.getName(),
-                    drink.getMethod(),
-                    drinkRepository.findAllAlcoholIngredientsForDrink(drink.getId()),
-                    drinkRepository.findAllFillerIngredientForDrink(drink.getId())));
+    public List<DrinkResponseDTO> getFavoriteDrinksOfUser(Long id) {
+        List<Drink> favDrinksOfUser = userRepository.getFavoriteDrinksOfUser(id);
+        List<DrinkResponseDTO> favDrinkResponseList = new ArrayList<>();
+        for (Drink d : favDrinksOfUser) {
+            favDrinkResponseList.add(drinkService.getDrinkResponseDTOFromId(d.getId().toString()));
         }
-        return favoriteDrinksResponseDTO;
+        return favDrinkResponseList;
     }
 
-    List<DrinkResponseDTO> getUserMadeDrinksResponseDTO(Long userId) {
-        List<Drink> userMadeDrinks = userRepository.findAllDrinksMadeByUser(userId);
-        List<DrinkResponseDTO> userMadeDrinksResponseDTO = new ArrayList<>();
-        for (Drink drink : userMadeDrinks) {
-            userMadeDrinksResponseDTO.add(new DrinkResponseDTO(drink.getId(),
-                    drink.getName(),
-                    drink.getMethod(),
-                    drinkRepository.findAllAlcoholIngredientsForDrink(drink.getId()),
-                    drinkRepository.findAllFillerIngredientForDrink(drink.getId())));
+    public List<DrinkResponseDTO> findUserMadeDrinkList(Long id) {
+        List<Drink> userMadeDrinkList = userRepository.findUserMadeDrinkList(id);
+        List<DrinkResponseDTO> userMadeDrinkresponseList = new ArrayList<>();
+        for (Drink d : userMadeDrinkList) {
+            userMadeDrinkresponseList.add(drinkService.getDrinkResponseDTOFromId(d.getId().toString()));
         }
-        return userMadeDrinksResponseDTO;
+        return userMadeDrinkresponseList;
     }
 
-    private List<Drink> getFavoriteDrinkListOfUser(HttpSession sess) {
-        return userRepository.findFavoriteDrinkListOfUser((Long) sess.getAttribute("authenticatedUserId"));
-    }
 
     public void editUserPassword(HttpSession sess, Model model, String oldPassword, String newPassword) {
         User loggedUser = userRepository.findUserById((Long) sess.getAttribute("authenticatedUserId"));
@@ -88,24 +77,17 @@ public class UserService {
         }
     }
 
-    public boolean isLogged (HttpSession session) {
-        boolean logged = false;
-        if (session.getAttribute("authenticatedUserId")!=null) {
-            logged = true;
-        }
-        return logged;
-    }
-
     public boolean loggingIn(UserLoggingDTO userLoggingDTO,
-                          HttpSession sess,
+                          HttpServletRequest request,
                           HttpServletResponse response) {
         boolean loggedIn = false;
-        if(userLoggingDTO.getLoggingMethod().equals("123@123.com") || userLoggingDTO.getLoggingMethod().equals("admin")) {
+        HttpSession sess = request.getSession(true);
+        if(userLoggingDTO.getLoggingMethod().equals("admin")) {
             User adminUser = userRepository.findUserToAuthenticate(userLoggingDTO.getLoggingMethod());
             sess.setAttribute("authenticatedUserId", adminUser.getId());
             loggedIn = true;
         }
-        if (authenticate(userLoggingDTO.getLoggingMethod(), userLoggingDTO.getPassword())) {
+        else if (authenticate(userLoggingDTO.getLoggingMethod(), userLoggingDTO.getPassword())) {
             if (userLoggingDTO.isRememberPassword()) {
                 Cookie cookie = new Cookie("password", userLoggingDTO.getPassword());
                 cookie.setMaxAge(60*60*24*30);
@@ -113,7 +95,9 @@ public class UserService {
             }
             User loggedUser = userRepository.findUserToAuthenticate(userLoggingDTO.getLoggingMethod());
             sess.setAttribute("authenticatedUserId", loggedUser.getId());
+            sess.setAttribute("authenticatedUserName", loggedUser.getUserName());
             loggedIn = true;
+            sess.setAttribute("isLogged", true);
         }
         return loggedIn;
     }
@@ -131,13 +115,18 @@ public class UserService {
 
     private boolean authenticate(String loggingMethod, String password) {
         User userToAuthenticate = userRepository.findUserToAuthenticate(loggingMethod);
-        boolean loggedSuccesfully = false;
+        boolean loggedSuccessfully = false;
         if (userToAuthenticate!=null) {
             String hashedPassword = userToAuthenticate.getPassword();
             if (BCrypt.checkpw(password, hashedPassword)) {
-                loggedSuccesfully = true;
+                loggedSuccessfully = true;
             }
         }
-        return loggedSuccesfully;
+        return loggedSuccessfully;
     }
+
+    public void logout(HttpSession sess) {
+        sess.invalidate();
+    }
+
 }

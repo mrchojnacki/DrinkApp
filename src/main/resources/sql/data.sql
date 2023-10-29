@@ -3,14 +3,6 @@ insert ignore into Users (id, createdOn, email, lastUpdatedOn, password, userNam
 values
     (1, NOW(6), '123@123.com', NOW(6), '123', 'admin');
 
-insert into Ratings (valueOfRating, drink_id, user_id)
-VALUES
-    (1, 1, 1), (2, 2, 1), (3, 3, 1), (4, 4, 1), (4, 5, 1),
-    (3, 6, 1), (2, 7, 1), (5, 8, 1), (2, 9, 1), (1, 10, 1),
-    (4, 11, 1), (3, 12, 1), (4, 13, 1), (2, 14, 1), (5, 15, 0),
-    (2, 16, 1), (3, 17, 1), (4, 18, 1), (2, 19, 1), (3, 20, 1),
-    (4, 21, 1);
-
 INSERT INTO drinks (name, method, createdOn, lastUpdatedOn, user_id)
 VALUES
     ('Bellini', 'Pour peach puree into the mixing glass with ice, add the Prosecco wine. Stir gently and pour in a chilled flute glass.  Note: PUCCINI - Fresh Mandarin Orange Juice; ROSSINI - Fresh Strawberry Puree; TINTORETTO - Fresh Pomegranate Juice.', NOW(6), NOW(6), 1),
@@ -88,4 +80,13 @@ values
     (13, 19), (13, 20), (15, 21), (15, 22), (15, 23), (17, 24),
     (17, 25), (17, 13), (18, 26), (18, 27), (18, 28), (19, 28),
     (20, 29), (21, 30), (21, 31), (21, 32)
+;
+SET FOREIGN_KEY_CHECKS=0;
+insert into Ratings (valueOfRating, drink_id, user_id)
+VALUES
+    (1, 1, 1), (2, 2, 1), (3, 3, 1), (4, 4, 1), (4, 5, 1),
+    (3, 6, 1), (2, 7, 1), (5, 8, 1), (2, 9, 1), (1, 10, 1),
+    (4, 11, 1), (3, 12, 1), (4, 13, 1), (2, 14, 1), (5, 15, 0),
+    (2, 16, 1), (3, 17, 1), (4, 18, 1), (2, 19, 1), (3, 20, 1),
+    (4, 21, 1)
 ;

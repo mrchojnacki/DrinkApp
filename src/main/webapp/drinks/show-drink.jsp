@@ -18,13 +18,17 @@
     <meta name="author" content="" />
     <title>Dashboard - SB Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="/css/styles.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" /><%--
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+--%>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="../htmls/index.html">Start Bootstrap</a>
+    <a class="navbar-brand ps-3" href="/">Home</a>
     <!-- Sidebar Toggle-->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
     <!-- Navbar Search-->
@@ -39,9 +43,16 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="/myAccount">My Account</a></li>
-                <li><hr class="dropdown-divider" /></li>
-                <li><a class="dropdown-item" href="#!">Logout</a></li>
+                <c:choose>
+                    <c:when test="${isLogged=!null}">
+                        <li><a class="dropdown-item" href="/myAccount">My Account</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li><a class="dropdown-item" href="/login">Log in</a></li>
+                    </c:otherwise>
+                </c:choose>
             </ul>
         </li>
     </ul>
@@ -52,23 +63,24 @@
             <div class="sb-sidenav-menu">
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading">Menu</div>
-                    <a class="nav-link" href="../htmls/index.html">
+                    <a class="nav-link" href="/">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         Dashboard
                     </a>
-                    <!-- Get ALL Drinks-->
-                    <a class="nav-link" href="../htmls/index.html">
+                    <a class="nav-link" href="/list">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         All Drinks
                     </a>
-                    <a class="nav-link" href="../htmls/index.html">
+                    <c:if test="${isLogged=!null}">
+                    <a class="nav-link" href="/favList">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         Favorite Drinks
                     </a>
-                    <a class="nav-link" href="../htmls/index.html">
+                    <a class="nav-link" href="/userList">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         Drinks Created By You
                     </a>
+                    </c:if>
                     <a class="nav-link" href="../htmls/index.html">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         All Ingredients
@@ -76,33 +88,74 @@
                 </div>
             </div>
             <div class="sb-sidenav-footer">
+                <c:if test="${isLogged!=null}">
                 <div class="small">Logged in as:</div>
-                USER NAME
+                ${authenticatedUserName}
+                </c:if>
             </div>
         </nav>
     </div>
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
+                <div class="row">
+                <div class="col-xl-5">
                 <h1 class="mt-4">${drink.name}</h1>
-              <%--  <form>
-                    GWIAZDKI
-                </form>--%>
+                </div>
+                <div class="col-xl-3">
+                <div class="container">
+                    <c:if test="${isLogged=!null}">
+                        <div class="rating-box">
+                        <header>Rate This Drink!</header>
+                        <div class="stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                    </div>
+                    <input type="hidden" name="rating" id="rating">
+                    </c:if>
+                    <h4 class="justify-content-center">${avgRating}</h4>
+                </div>
+                </div>
+                    <div class="col-xl-1">
+                        <form action="/toggleToFavorites" method="post">
+                            <input type="hidden" name="drinkId" value="${drinkId}">
+                            <c:choose>
+                                <c:when test="${!isFavorite}">
+                                    <button type="submit" class="btn btn-warning">Add To Favorites!</button>
+                                </c:when>
+                                <c:otherwise>
+                                    <button type="submit" class="btn btn-warning">Remove From Favorites</button>
+                                </c:otherwise>
+                            </c:choose>
+                        </form>
+                    </div>
+                    <c:if test="${isUserMade}">
+                        <div class="col-xl-2">
+                            <a href="/editDrink/${drink.id}">
+                                <button class="btn btn-info">Edit Your Drink</button>
+                            </a>
+                        </div>
+                    </c:if>
+                </div>
             </div>
+            <div class="container-fluid px-4">
             <div class="row">
                 <div class="col-xl-2">
-                    <h2>Alcohol Ingredients</h2>
+                    <h3>Alcohol Ingredients</h3>
                     <ul>
                         <c:forEach var="alcoholIngredient" items="${drink.alcoholIngredientList}">
                             <li>
                                 <c:out value="${alcoholIngredient}"/>
-                                <%--<c:out value="${alcoholIngredient.alcoholType + \", \" + alcoholIngredient.volumeMillilitres}"/>--%>
                             </li>
                         </c:forEach>
                     </ul>
                 </div>
                 <div class="col-xl-2">
-                    <h2>Fill Ingredients</h2>
+                    <h3>Fill Ingredients</h3>
                     <ul>
                         <c:forEach var="fillIngredient" items="${drink.fillIngredientList}">
                             <li>
@@ -111,67 +164,78 @@
                         </c:forEach>
                     </ul>
                 </div>
-                <div class="col-xl-8">
+                <div class="col-xl-5">
                     <img src="/images/${drink.id}">
                 </div>
             </div>
+            </div>
+            <div class="container-fluid px-4">
             <div class="row">
                 <c:out value="${drink.method}"/>
+                </div>
             </div>
             <section style="background-color: #eee;">
                 <div class="container my-5 py-5">
                     <div class="row d-flex justify-content-center">
                         <div class="col-md-12 col-lg-10 col-xl-8">
                             <div class="card">
-                                <c:forEach var="comment" items="commentList">
-                                <div class="card-body">
-                                    <div class="d-flex flex-start align-items-center">
-                                        <div>
-                                            <h6 class="fw-bold text-primary mb-1">Lily Coleman</h6>
-                                            <p class="text-muted small mb-0">
-                                                Shared publicly - Jan 2020
-                                            </p>
+                                <c:choose>
+                                    <c:when test="${commentList!=null}">
+                                        <c:forEach var="comment" items="${commentList}">
+                                            <div class="card-body">
+                                                <div class="d-flex flex-start align-items-center">
+                                                    <div>
+                                                        <h6 class="fw-bold text-primary mb-1">${comment.userName}</h6>
+                                                        <p class="text-muted small mb-0">
+                                                                ${comment.createdOn}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <p class="mt-3 mb-4 pb-2">
+                                                        ${comment.commentContent}
+                                                </p>
+                                                <div class="small d-flex justify-content-start">
+                                                    <a href="#!" class="d-flex align-items-center me-3">
+                                                        <i class="far fa-thumbs-up me-2"></i>
+                                                        <p class="mb-0">Like</p>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                        </c:when>
+                                    <c:otherwise>
+                                        <div class="row">
+                                            <div class="col-xl-5">
+                                                <h3 class="fw-bold text-primary mb-1">No comments yet, be first to comment this drink!</h3>
+                                            </div>
                                         </div>
-                                    </div>
-
-                                    <p class="mt-3 mb-4 pb-2">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                        quis nostrud exercitation ullamco laboris nisi ut aliquip consequat.
-                                    </p>
-
-                                    <div class="small d-flex justify-content-start">
-                                        <a href="#!" class="d-flex align-items-center me-3">
-                                            <i class="far fa-thumbs-up me-2"></i>
-                                            <p class="mb-0">Like</p>
-                                        </a>
-                                        <a href="#!" class="d-flex align-items-center me-3">
-                                            <i class="far fa-comment-dots me-2"></i>
-                                            <p class="mb-0">Comment</p>
-                                        </a>
-                                        <a href="#!" class="d-flex align-items-center me-3">
-                                            <i class="fas fa-share me-2"></i>
-                                            <p class="mb-0">Share</p>
-                                        </a>
-                                    </div>
-                                </div>
-                                </c:forEach>
+                                    </c:otherwise>
+                                </c:choose>
+                                <c:choose>
+                                <c:when test="${isLogged!=null}">
+                                <form action="/addComment" method="post">
                                 <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
                                     <div class="d-flex flex-start w-100">
-                                        <img class="rounded-circle shadow-1-strong me-3"
-                                             src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="40"
-                                             height="40" />
                                         <div class="form-outline w-100">
-                <textarea class="form-control" id="textAreaExample" rows="4"
-                          style="background: #fff;"></textarea>
-                                            <label class="form-label" for="textAreaExample">Message</label>
+                                            <textarea name="commentContent" class="form-control" id="commentContent" rows="4"
+                                                      style="background: #fff;" placeholder="Enter your comment here"/></textarea>
                                         </div>
+                                        <input type="hidden" id="drinkId" name="drinkId" value="${drink.id}">
                                     </div>
                                     <div class="float-end mt-2 pt-1">
-                                        <button type="button" class="btn btn-primary btn-sm">Post comment</button>
-                                        <button type="button" class="btn btn-outline-primary btn-sm">Cancel</button>
+                                        <button type="submit" class="btn btn-primary btn-sm">Post comment</button>
                                     </div>
                                 </div>
+                                </form>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="row">
+                                        <div class="col-xl-8">
+                                            <h5 class="fw-bold text-primary mb-1">Log in to comment on the Drink!</h5>
+                                        </div>
+                                    </div>
+                                </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                     </div>
@@ -192,12 +256,14 @@
         </footer>
     </div>
 </div>
+<script>
+    let drinkId = ${drink.id};
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<script src="../js/scripts.js"></script>
+<script src="/js/scripts.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-<script src="../assets/demo/chart-area-demo.js"></script>
-<script src="../assets/demo/chart-bar-demo.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-<script src="../js/datatables-simple-demo.js"></script>
+<script src="/js/datatables-simple-demo.js"></script>
+<script src="/js/addons/rating.js"></script>
 </body>
 </html>

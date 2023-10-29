@@ -10,21 +10,13 @@ public class UserRegisterDTO {
     @Size(min = 2, max = 30, message = "Username should be at least 2 letters long")
     private String userName;
     @NotNull
-    @Email
+    @Email(message = "Enter a real e-mail address")
     private String email;
     @NotNull
     @Size(min=6, message = "Password should be at least 6 characters long")
     private String password;
     private String passwordConfirmation;
     private boolean rememberPassword;
-
-    public UserRegisterDTO(String userName, String email, String password, String passwordConfirmation, boolean rememberPassword) {
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.passwordConfirmation = passwordConfirmation;
-        this.rememberPassword = rememberPassword;
-    }
 
     public UserRegisterDTO() {
     }

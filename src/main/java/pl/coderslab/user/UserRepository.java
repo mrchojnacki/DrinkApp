@@ -2,6 +2,7 @@ package pl.coderslab.user;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -21,20 +22,15 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.id =:id")
-    public User findUserById(@Param("id") Long id);
+     User findUserById(@Param("id") Long id);
 
-    @Query("select u from User u where u.email =:loginMethod or u.userName =:loginMethod")
-    public User findUserToAuthenticate(@Param("loginMethod") String loginMethod);
+    @Query("SELECT u FROM User u WHERE u.email = :loggingMethod OR u.userName = :loggingMethod")
+     User findUserToAuthenticate(@Param("loggingMethod") String loggingMethod);
 
     @Query("select d from Drink d join d.user u where u.id =:userId")
-    public List<Drink> findFavoriteDrinkListOfUser(@Param("userId") Long userId);
+     List<Drink> findUserMadeDrinkList(@Param("userId") Long userId);
 
-    @Query(value = "insert into users_drinks (drink_id, user_id) values (:drinkId, :userId)", nativeQuery = true)
-    public void addDrinkToFavorites(@Param("drinkId") Long drinkId, @Param("userId") Long userId);
+    @Query("select d from Drink d join d.userFavList uf where uf.id =:userId")
+    List<Drink> getFavoriteDrinksOfUser(@Param("userId") Long userId);
 
-    @Query(value = "delete from users_drinks ud where ud.drink_id =:drinkId", nativeQuery = true)
-    public void removeDrinkFromFavorites(@Param("drinkId") Long drinkId);
-
-    @Query(value = "select * from drinks where user_id = ?1", nativeQuery = true)
-    public List<Drink> findAllDrinksMadeByUser(Long userId);
 }

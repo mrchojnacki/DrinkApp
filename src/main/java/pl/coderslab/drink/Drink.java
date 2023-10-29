@@ -1,7 +1,9 @@
 package pl.coderslab.drink;
 
+
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import pl.coderslab.comments.CommentEntity;
 import pl.coderslab.ingredient.AlcoholIngredient;
 import pl.coderslab.ingredient.FillIngredient;
@@ -25,35 +27,52 @@ public class Drink {
     private LocalDateTime createdOn;
     private LocalDateTime lastUpdatedOn;
 
-    @ManyToMany(mappedBy = "favDrinks")
-    @Cascade(CascadeType.SAVE_UPDATE)
+    @ManyToMany(mappedBy = "favDrinks",
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     private List<User> userFavList = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Cascade(CascadeType.SAVE_UPDATE)
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany
-    @Cascade(CascadeType.SAVE_UPDATE)
+    @ManyToMany(cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name = "drinks_alcohol_ingredients",
     joinColumns = @JoinColumn(name = "drink_id"),
     inverseJoinColumns = @JoinColumn(name = "alcohol_ingredient_id"))
     private List<AlcoholIngredient> alcoholIngredients;
 
-    @ManyToMany
-    @Cascade(CascadeType.SAVE_UPDATE)
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name = "drinks_fill_ingredients",
     joinColumns = @JoinColumn(name = "drink_id"),
     inverseJoinColumns = @JoinColumn(name = "fill_ingredient_id"))
     private List<FillIngredient> fillIngredients;
 
-    @OneToMany(mappedBy = "drink")
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @OneToMany(mappedBy = "drink",
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     List<RatingEntity> listOfRatings = new ArrayList<>();
 
-    @OneToMany(mappedBy = "drink")
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @OneToMany(mappedBy = "drink",
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     List<CommentEntity> listOfDrinkComments = new ArrayList<>();
 
     public Drink() {

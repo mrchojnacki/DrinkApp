@@ -22,17 +22,19 @@ public class IngredientService {
         FillIngredient updatedFillIngredient = fillerIngredientRepository.updateFillerIngredient(fillIngredient);
         return updatedFillIngredient;
     }
+
+
     public FillIngredient getFillIngredientById(Long id) {
         return fillerIngredientRepository.findFillerIngredientById(id);
     }
-    public FillIngredient getFillIngredientByName(String name) {
+    public List<FillIngredient> getFillIngredientByName(String name) {
         return fillerIngredientRepository.findFillerIngredientByName(name);
     }
 
     public AlcoholIngredient getAlcoholIngredientById(Long id) {
         return alcoholIngredientRepository.findAlcoholIngredientById(id);
     }
-    public AlcoholIngredient getAlcoholIngredientByName(String name) {
+    public List<AlcoholIngredient> getAlcoholIngredientByName(String name) {
         return alcoholIngredientRepository.findAlcoholIngredientByName(name);
     }
 

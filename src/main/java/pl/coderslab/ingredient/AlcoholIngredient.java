@@ -3,10 +3,7 @@ package pl.coderslab.ingredient;
 import pl.coderslab.drink.Drink;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "alcohol_ingredients")
@@ -54,5 +51,18 @@ public class AlcoholIngredient {
     @Override
     public String toString() {
         return alcoholType + ", " + volumeMillilitres;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AlcoholIngredient)) return false;
+        AlcoholIngredient that = (AlcoholIngredient) o;
+        return volumeMillilitres == that.volumeMillilitres && id.equals(that.id) && alcoholType.equals(that.alcoholType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, alcoholType, volumeMillilitres);
     }
 }

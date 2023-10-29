@@ -63,14 +63,14 @@
             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
             All Drinks
           </a>
-            <a class="nav-link" href="favList">
-              <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-              Favorite Drinks
-            </a>
-            <a class="nav-link" href="/userList">
-              <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-              Drinks Created By You
-            </a>
+          <a class="nav-link" href="favList">
+            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+            Favorite Drinks
+          </a>
+          <a class="nav-link" href="/userList">
+            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+            Drinks Created By You
+          </a>
           <a class="nav-link" href="../htmls/index.html">
             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
             All Ingredients
@@ -86,27 +86,27 @@
   <div id="layoutSidenav_content">
     <main>
       <div class="container-fluid px-4">
-        <h1 class="mt-4">Add New Drink!</h1>
-        <form action="/addNewDrink" method="post" enctype="multipart/form-data">
+        <h1 class="mt-4">Edit Your Drink!</h1>
+        <form action="/editDrink" method="post" enctype="multipart/form-data">
           <div class="row">
             <div class="col-lg-6">
               <div class="card">
                 <div class="card-body">
-              <input class="form-control" type="text" name="name" id="name" placeholder="Name of the Drink" value="${name}">
-              <c:if test="${nameTakenError!=null}">
-                <div class="text-danger">${nameTakenError}</div>
-              </c:if>
-              <c:if test="${nameError!=null}">
-                <div class="text-danger">${nameError}</div>
-              </c:if>
-            </div>
+                  <input class="form-control" type="text" name="name" id="name" placeholder="Name of the Drink" value="${drink.name}">
+                  <c:if test="${nameTakenError!=null}">
+                    <div class="text-danger">${nameTakenError}</div>
+                  </c:if>
+                  <c:if test="${nameError!=null}">
+                    <div class="text-danger">${nameError}</div>
+                  </c:if>
+                </div>
               </div>
             </div>
             <div class="col-lg-6">
               <div class="card">
                 <div class="card-body">
-              <textarea class="form-control" name="method" id="method" placeholder="Drink Making Method" rows="5" cols="50">${method}</textarea>
-            </div>
+                  <textarea class="form-control" name="method" id="method" placeholder="Drink Making Method" rows="5" cols="50">${drink.method}</textarea>
+                </div>
               </div>
             </div>
           </div>
@@ -119,75 +119,80 @@
             <div class="col-lg-3">
               <div class="card">
                 <div class="card-body">
-              <div id="existingAlcohols">
-              <div class="existingAlcohol">
-              <select name="existingAlcoholIds" id="existingAlcoholIds">
-                <c:forEach items="${alcoholIngredients}" var="alcIng">
-                  <option value="${alcIng.id}">${alcIng}</option>
-                </c:forEach>
-              </select>
-              <button class="btn btn-danger btn-sm remove" type="button">Delete this entry</button>
-              </div>
-              <button class="btn btn-primary btn-sm" type="button" id="add-select-alcohol">Add Next Alcohol</button>
-              </div>
-            </div>
-              </div>
-            </div>
-            <div class="col-lg-3">
-              <div class="card">
-                <div class="card-body">
-              <div id="existingFillers">
-                <div class="existingFiller">
-                    <select name="existingFillIds" id="existingFillIds">
-                     <c:forEach items="${fillIngredients}" var="fillIng">
-                       <option value="${fillIng.id}">${fillIng}</option>
-                     </c:forEach>
-                    </select>
-                  <button class="btn btn-danger btn-sm remove" type="button">Delete this entry</button>
+                  <div id="existingAlcohols">
+
+                    <button class="btn btn-primary btn-sm" type="button" id="add-select-alcohol">Add Next Alcohol</button>
+                  </div>
                 </div>
-                <button class="btn btn-primary btn-sm" type="button" id="add-select-filler">Add next filler</button>
-              </div>
-            </div>
               </div>
             </div>
             <div class="col-lg-3">
               <div class="card">
                 <div class="card-body">
-              <c:if test="${nonInPairIngredientInputAmountError!=null}">
-                <br>
-                <div class="text-danger">${nonInPairIngredientInputAmountError}</div>
-                <br>
-              </c:if>
-              <div id="alcoholFields">
-                <div class="alcoholField">
-                  <input class="form-control" name="newAlcoholName" id="newAlcoholName" placeholder="Type in alcohol type"/>
-                  <input class="form-control" name="newAlcoholVolume" id="newAlcoholVolume" placeholder="Volume"/>
-                  <c:if test="${parseError!=null}">
+                  <div id="existingFillers">
+
+                    <button class="btn btn-primary btn-sm" type="button" id="add-select-filler">Add next filler</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div class="card">
+                <div class="card-body">
+                  <c:if test="${nonInPairIngredientInputAmountError!=null}">
                     <br>
-                    <div class="text-danger">${parseError}</div>
+                    <div class="text-danger">${nonInPairIngredientInputAmountError}</div>
                     <br>
                   </c:if>
-                  <button class="btn btn-danger btn-sm" type="button" class="remove">Delete this entry</button>
+                  <div id="alcoholFields">
+                    <c:forEach var="dAlcIng" items="${drink.alcoholIngredientList}">
+                      <div class="alcoholField">
+                        <input class="form-control" name="newAlcoholName" id="newAlcoholName" placeholder="Type in alcohol type" value="${dAlcIng.alcoholType}"/>
+                        <input class="form-control" name="newAlcoholVolume" id="newAlcoholVolume" placeholder="Volume" value="${dAlcIng.volumeMillilitres}"/>
+                        <c:if test="${parseError!=null}">
+                          <br>
+                          <div class="text-danger">${parseError}</div>
+                          <br>
+                        </c:if>
+                        <button class="btn btn-danger btn-sm remove" type="button">Delete this entry</button>
+                      </div>
+                    </c:forEach>
+                    <div class="alcoholField">
+                      <input class="form-control" name="newAlcoholName" id="newAlcoholName" placeholder="Type in alcohol type"/>
+                      <input class="form-control" name="newAlcoholVolume" id="newAlcoholVolume" placeholder="Volume"/>
+                      <c:if test="${parseError!=null}">
+                        <br>
+                        <div class="text-danger">${parseError}</div>
+                        <br>
+                      </c:if>
+                      <button class="btn btn-danger btn-sm remove" type="button">Delete this entry</button>
+                    </div>
+                    <button class="btn btn-primary btn-sm" type="button" id="addAlcohol">Add Next Alcohol</button>
+                  </div>
                 </div>
-                <button class="btn btn-primary btn-sm" type="button" id="addAlcohol">Add Next Alcohol</button>
-              </div>
-            </div>
               </div>
             </div>
             <div class="col-lg-3">
               <div class="card">
                 <div class="card-body">
-              <div class="card">
-            <div id="ingredientFields">
-              <div class="ingredientField">
-                <input class="form-control" name="newFillName" id="newFillName" placeholder="Type in Filler Ingredient"/>
-                <input class="form-control" name="newFillAmount" id="newFillAmount" placeholder="Amount of Filler Ingredient"/>
-                <button class="btn btn-danger btn-sm remove" type="button">Delete this entry</button>
-              </div>
-              <button class="btn btn-primary btn-sm" type="button" id="addIngredient">Add next Filler</button>
-            </div>
-              </div>
-            </div>
+                  <div class="card">
+                    <div id="ingredientFields">
+                      <c:forEach var="dFillIng" items="${drink.fillIngredientList}">
+                        <div class="ingredientField">
+                          <input class="form-control" name="newFillName" placeholder="Type in Filler Ingredient" value="${dFillIng.fill}"/>
+                          <input class="form-control" name="newFillAmount" placeholder="Amount of Filler Ingredient" value="${dFillIng.amount}"/>
+                          <button class="btn btn-danger btn-sm remove" type="button">Delete this entry</button>
+                        </div>
+                      </c:forEach>
+                      <div class="ingredientField">
+                        <input class="form-control" name="newFillName" id="newFillName" placeholder="Type in Filler Ingredient"/>
+                        <input class="form-control" name="newFillAmount" id="newFillAmount" placeholder="Amount of Filler Ingredient"/>
+                        <button class="btn btn-danger btn-sm remove" type="button">Delete this entry</button>
+                      </div>
+                      <button class="btn btn-primary btn-sm" type="button" id="addIngredient">Add next Filler</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -196,16 +201,17 @@
           <div class="row-cols-1">
             <div class="card">
               <div class="card-body">
-              <br>
-              <div class="mb-3">
-                <label for="image" class="form-label">Add photo if you want:</label>
-                <input class="form-control" type="file" id="image" name="image">
-              </div>
+                <br>
+                <div class="mb-3">
+                  <label for="image" class="form-label">Add photo if you want:</label>
+                  <input class="form-control" type="file" id="image" name="image">
+                </div>
               </div>
               <br>
             </div>
           </div>
-          <button class="btn btn-success" type="submit">Add New Drink!</button>
+          <input type="hidden" name="drinkId" value="${drink.id}">
+          <button class="btn btn-success" type="submit">Edit Drink!</button>
         </form>
       </div>
     </main>
@@ -233,25 +239,25 @@
 <script src="/js/dynamicForm.js"></script>
 <script>
   $(document).ready(function () {
-    $('#add-select-alcohol').on('click', function () {
-      const newSelect = `
-            <div class="existingAlcohol">
+  $('#add-select-alcohol').on('click', function () {
+    const newSelect = `
+       <div class="existingAlcohol">
               <select name="existingAlcoholIds" id="existingAlcoholIds">
                 <c:forEach items="${alcoholIngredients}" var="alcIng">
                   <option value="${alcIng.id}">${alcIng}</option>
                 </c:forEach>
               </select>
               <button class="btn btn-danger btn-sm remove" type="button">Delete this entry</button>
-            </div>
+              </div>
       `;
 
-      $('#existingAlcohols').append(newSelect);
-    });
-    $("#existingAlcohols").on("click", ".remove", function () {
-      $(this).parent().remove();
-    });
-    $('#add-select-filler').on('click', function () {
-      const newSelect = `
+    $('#existingAlcohols').append(newSelect);
+  });
+  $("#existingAlcohols").on("click", ".remove", function () {
+  $(this).parent().remove();
+});
+  $('#add-select-filler').on('click', function () {
+  const newSelect = `
        <div class="existingFiller">
               <select name="existingFillIds" id="existingFillIds">
                 <c:forEach items="${fillIngredients}" var="fillIng">
@@ -262,12 +268,12 @@
               </div>
       `;
 
-      $('#existingFillers').append(newSelect);
-    });
-    $("#existingFillers").on("click", ".remove", function () {
-      $(this).parent().remove();
-    });
-  });
+  $('#existingFillers').append(newSelect);
+});
+  $("#existingFillers").on("click", ".remove", function () {
+  $(this).parent().remove();
+});
+});
 </script>
 </body>
 </html>

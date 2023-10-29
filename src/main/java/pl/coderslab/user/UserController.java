@@ -32,11 +32,11 @@ public class UserController {
 
     @PostMapping("/login")
     public String loginUserPost(@ModelAttribute("userLoggingIn") UserLoggingDTO userLoggingDTO,
-                                HttpSession sess,
+                                HttpServletRequest request,
                                 Model model,
                                 HttpServletResponse response) {
-        if (userService.loggingIn(userLoggingDTO, sess, response)) {
-            return "dashboard.jsp";
+        if (userService.loggingIn(userLoggingDTO, request, response)) {
+            return  "redirect:/";
         } else {
             model.addAttribute("loginError", "Invalid username/email or password");
             return "/user/login.jsp";
@@ -49,6 +49,7 @@ public class UserController {
         return "/user/register.jsp";
     }
 
+
     @PostMapping("/register")
     public String registerNewUserPost(@ModelAttribute("userRegister") @Valid UserRegisterDTO userRegisterDTO,
                                       BindingResult result,
@@ -60,7 +61,7 @@ public class UserController {
         }
         model.addAttribute("registerSuccessfully", "Registration complete! You can log in now");
         userService.addUserToDb(userRegisterDTO, response);
-        return "/login";
+        return "redirect:/login";
     }
 
     @GetMapping("/myAccount")
@@ -80,5 +81,11 @@ public class UserController {
                                    HttpSession sess) {
         userService.editUserPassword(sess, model, oldPassword, newPassword);
         return "/user/myAccount.jsp";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession sess) {
+        userService.logout(sess);
+        return "redirect:/";
     }
 }

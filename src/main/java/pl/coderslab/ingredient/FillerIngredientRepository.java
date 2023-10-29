@@ -20,13 +20,13 @@ public class FillerIngredientRepository {
     public FillIngredient findFillerIngredientById(Long id) {
         return entityManager.find(FillIngredient.class, id);
     }
-    public FillIngredient findFillerIngredientByName(String name) {
-        return (FillIngredient) entityManager.createQuery("select fi from FillIngredient fi where fi.fill =:name")
+    public List<FillIngredient> findFillerIngredientByName(String name) {
+        return (List<FillIngredient>) entityManager.createQuery("select fi from FillIngredient fi where fi.fill =:name")
                 .setParameter("name", name)
-                .getSingleResult();
+                .getResultList();
     }
-    public List<FillIngredient> findDistinctFillerIngredients() {
-        return (List<FillIngredient>) entityManager.createQuery("select distinct fi from FillIngredient fi").getResultList();
+    public List<FillIngredient> findDistinctFillerIngredientNames() {
+        return (List<FillIngredient>) entityManager.createQuery("select distinct fi.fill from FillIngredient fi").getResultList();
     }
     public FillIngredient createFillerIngredient(FillIngredient fillIngredient) {
         return entityManager.merge(fillIngredient);
@@ -37,4 +37,5 @@ public class FillerIngredientRepository {
     public void deleteFillerIngredient(Long id) {
         entityManager.remove(findFillerIngredientById(id));
     }
+
 }

@@ -1,7 +1,5 @@
 package pl.coderslab.drink;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,12 +17,25 @@ public interface DrinkRepository extends JpaRepository<Drink, Long> {
     @Override
     Optional<Drink> findById(Long id);
 
-    Optional<Drink> getDrinkByName(String name);
+    @Query("select d from Drink d where d.name =:name")
+    Optional<Drink> getDrinkByName(@Param("name") String name);
+
+    @Query("select d from Drink d where d.user.id =:userId")
+    List<Drink> findDrinkOfUser(@Param("userId") Long userId);
 
     @Query("select ai from AlcoholIngredient ai join ai.drinks d where d.id =:drinkId")
-    public List<AlcoholIngredient> findAllAlcoholIngredientsForDrink(@Param("drinkId") Long drinkId);
+    List<AlcoholIngredient> findAllAlcoholIngredientsForDrink(@Param("drinkId") Long drinkId);
 
     @Query("select fi from FillIngredient fi join fi.drinkList d where d.id =:drinkId")
-    public List<FillIngredient> findAllFillerIngredientForDrink(@Param("drinkId") Long drinkId);
+    List<FillIngredient> findAllFillerIngredientForDrink(@Param("drinkId") Long drinkId);
+
+    @Query("select d from Drink d where d.user.id =:userId")
+    List<Drink> getAllUserMadeDrinks(@Param("userId") Long userId);
+
+    @Query("select count(fi) from FillIngredient fi join fi.drinkList d where d.id =:drinkId")
+    Integer getCountOfFillerIngredientsOfDrink(@Param("drinkId") Long drinkId);
+
+    @Query("select count(ai) from AlcoholIngredient ai join ai.drinks d where d.id =:drinkId")
+    Integer getCountOfAlcoholIngredientsOfDrink(@Param("drinkId") Long drinkId);
 
 }

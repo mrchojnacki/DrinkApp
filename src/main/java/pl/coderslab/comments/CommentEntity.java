@@ -22,13 +22,17 @@ public class CommentEntity {
     public void prePersist() {
         createdOn = LocalDateTime.now();
     }
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
     @JoinColumn(name = "drink_id")
     private Drink drink;
 
@@ -69,5 +73,9 @@ public class CommentEntity {
 
     public void setDrink(Drink drink) {
         this.drink = drink;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
     }
 }

@@ -14,26 +14,30 @@ public class RatingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long valueOfRating;
+    private int valueOfRating;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @ManyToOne(cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinColumn(name = "drink_id")
     private Drink drink;
 
     public RatingEntity() {
     }
 
-    public Long getValueOfRating() {
+    public int getValueOfRating() {
         return valueOfRating;
     }
 
-    public void setValueOfRating(Long valueOfRating) {
+    public void setValueOfRating(int valueOfRating) {
         this.valueOfRating = valueOfRating;
     }
 

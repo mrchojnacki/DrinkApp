@@ -14,7 +14,7 @@ public class AlcoholIngredientRepository {
     private EntityManager entityManager;
 
     public List<AlcoholIngredient> findAllAlcoholIngredients() {
-        return (List<AlcoholIngredient>) entityManager.createQuery("select ai from AlcoholIngredient ai", AlcoholIngredient.class);
+        return (List<AlcoholIngredient>) entityManager.createQuery("select ai from AlcoholIngredient ai", AlcoholIngredient.class).getResultList();
     }
     public AlcoholIngredient findAlcoholIngredientById(Long id){
         return entityManager.find(AlcoholIngredient.class, id);
@@ -28,10 +28,13 @@ public class AlcoholIngredientRepository {
     public void deleteAlcoholIngredient(Long id) {
         entityManager.remove(findAlcoholIngredientById(id));
     }
-    public AlcoholIngredient findAlcoholIngredientByName(String name) {
-        return (AlcoholIngredient) entityManager.createQuery("select ai from AlcoholIngredient ai where ai.alcoholType =:name")
+    public List<AlcoholIngredient> findAlcoholIngredientByName(String name) {
+        return (List<AlcoholIngredient>) entityManager.createQuery("select ai from AlcoholIngredient ai where ai.alcoholType =:name")
                 .setParameter("name", name)
-                .getSingleResult();
+                .getResultList();
+    }
+    public List<AlcoholIngredient> findDistinctFillerIngredientNames() {
+        return (List<AlcoholIngredient>) entityManager.createQuery("select distinct ai.alcoholType from AlcoholIngredient ai").getResultList();
     }
 
 }

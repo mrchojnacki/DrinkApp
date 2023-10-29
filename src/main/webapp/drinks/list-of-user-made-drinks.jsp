@@ -32,16 +32,9 @@
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-        <c:choose>
-          <c:when test="${isLogged=!null}">
-            <li><a class="dropdown-item" href="/myAccount">My Account</a></li>
-            <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="/logout">Logout</a></li>
-          </c:when>
-          <c:otherwise>
-            <li><a class="dropdown-item" href="/login">Log in</a></li>
-          </c:otherwise>
-        </c:choose>
+        <li><a class="dropdown-item" href="/myAccount">My Account</a></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li><a class="dropdown-item" href="#!">Logout</a></li>
       </ul>
     </li>
   </ul>
@@ -56,32 +49,31 @@
             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
             Dashboard
           </a>
-          <!-- Get ALL Drinks-->
           <a class="nav-link" href="/list">
             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
             All Drinks
           </a>
           <c:if test="${isLogged=!null}">
-          <a class="nav-link" href="/favList">
-            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-            Favorite Drinks
-          </a>
-          <a class="nav-link" href="/userList">
-            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-            Drinks Created By You
-          </a>
+            <a class="nav-link" href="../htmls/index.html">
+              <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+              Favorite Drinks
+            </a>
+            <a class="nav-link" href="../htmls/index.html">
+              <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+              Drinks Created By You
+            </a>
           </c:if>
-          <a class="nav-link" href="/">
+          <a class="nav-link" href="../htmls/index.html">
             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
             All Ingredients
           </a>
         </div>
       </div>
       <c:if test="${isLogged=!null}">
-      <div class="sb-sidenav-footer">
-        <div class="small">Logged in as:</div>
-        ${authenticatedUserName}
-      </div>
+        <div class="sb-sidenav-footer">
+          <div class="small">Logged in as:</div>
+            ${authenticatedUserName}
+        </div>
       </c:if>
     </nav>
   </div>
@@ -108,51 +100,51 @@
         </div>
         <c:forEach var="drink" items="${pageOfDrinks.content}">
           <c:set var="imageUrl" value="/images/${drink.id}" />
-        <div class="row">
-          <div class="col-xl-2">
-            <div class="card mb-4 align-items-center align-middle">
-              <h5>${drink.id}</h5>
-            </div>
-          </div>
-          <div class="col-xl-3">
-            <div class="card mb-4 align-items-center align-middle">
-              <h5><a class="align-middle align-items-center" href="/list/drink/${drink.id}">${drink.name}</a></h5>
-            </div>
-          </div>
-          <c:choose>
-          <c:when test="${not empty imageUrl}">
-          <div class="col-xl-6">
-            <div class="card mb-4">
-              <div class="container1 align-items-center">
-              <img class="scaled-image" src="${imageUrl}">
+          <div class="row">
+            <div class="col-xl-2">
+              <div class="card mb-4 align-middle align-items-center">
+                <h5>${drink.id}</h5>
               </div>
             </div>
-          </div>
-          </c:when>
-            <c:otherwise>
-              <div class="col-xl-6">
-                <div class="card mb-4">
-                  <div class="container1 align-items-center">
-                  <img class="scaled-image" src="/images/no">
+            <div class="col-xl-3">
+              <div class="card mb-4 align-middle align-items-center">
+                <h5><a href="/list/drink/${drink.id}">${drink.name}</a></h5>
+              </div>
+            </div>
+            <c:choose>
+              <c:when test="${not empty imageUrl}">
+                <div class="col-xl-6">
+                  <div class="card mb-4">
+                    <div class="container1 align-items-center">
+                      <img class="scaled-image" src="${imageUrl}">
+                    </div>
                   </div>
                 </div>
-              </div>
-            </c:otherwise>
-          </c:choose>
-        </div>
+              </c:when>
+              <c:otherwise>
+                <div class="col-xl-6">
+                  <div class="card mb-4">
+                    <div class="container1 align-items-center">
+                      <img class="scaled-image" src="/images/no">
+                    </div>
+                  </div>
+                </div>
+              </c:otherwise>
+            </c:choose>
+          </div>
         </c:forEach>
         <div class="row">
           <nav aria-label="Page navigation">
             <ul class="pagination">
               <c:if test="${pageNumber!=1}">
-                <li class="page-item"><a class="page-link" href="/list/page/${pageNumber-1}">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="/userList/page/${pageNumber-1}">Previous</a></li>
               </c:if>
-            <c:forEach var = "i" begin = "1" end = "${noOfPages}">
-              <li class="page-item"><a class="page-link" href="/list/page/${i}">${i}</a></li>
-            </c:forEach>
-            <c:if test="${pageNumber!=noOfPages||noOfPages!=0}">
-            <li class="page-item"><a class="page-link" href="/list/page/${pageNumber+1}">Next</a></li>
-            </c:if>
+              <c:forEach var = "i" begin = "1" end = "${noOfPages}">
+                <li class="page-item"><a class="page-link" href="/userList/page/${i}">${i}</a></li>
+              </c:forEach>
+              <c:if test="${pageNumber!=noOfPages&&userQuantity>5}">
+                <li class="page-item"><a class="page-link" href="/userList/page/${pageNumber+1}">Next</a></li>
+              </c:if>
             </ul>
           </nav>
         </div>
@@ -179,5 +171,74 @@
 <script src="../assets/demo/chart-bar-demo.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
 <script src="../js/datatables-simple-demo.js"></script>
+<%--
+<script>
+  const data = ${drinks}; // Dane przekazane z serwleta
+
+  const itemsPerPage = 5;
+  let currentPage = 1;
+
+  // Funkcja do wyświetlania danych na danej stronie
+  function displayData(page) {
+    const dataContainer = document.getElementById("data-container");
+    dataContainer.innerHTML = "";
+
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+
+    for (let i = start; i < end && i < data.length; i++) {
+      const item = `
+                    <div class="row">
+            <div class="col-xl-2">
+                  <c:set var="imageUrl" value="/images/data[i].id" />
+              <div class="card mb-4">
+                  data[i].id
+              </div>
+            </div>
+            <div class="col-xl-3">
+              <div class="card mb-4">
+                <a href="/list/drink/data[i].id">data[i].name</a>
+              </div>
+            </div>
+            <c:choose>
+              <c:when test="${not empty imageUrl}">
+                <div class="col-xl-6">
+                  <div class="card mb-4">
+                    <img src="${imageUrl}">
+                  </div>
+                </div>
+              </c:when>
+              <c:otherwise>
+                <div class="col-xl-6">
+                  <div class="card mb-4">
+                    <img src="/images/no">
+                  </div>
+                </div>
+              </c:otherwise>
+            </c:choose>
+          </div>
+                `;
+      dataContainer.append(item);
+    }
+  }
+
+  // Funkcja do obsługi przycisków paginacji
+  document.getElementById("prev-button").addEventListener("click", () => {
+    if (currentPage > 1) {
+      currentPage--;
+      displayData(currentPage);
+    }
+  });
+  document.getElementById("next-button").addEventListener("click", () => {
+    if (currentPage < Math.ceil(data.length / itemsPerPage)) {
+      currentPage++;
+      displayData(currentPage);
+    }
+  });
+  // Wyświetl dane na pierwszej stronie
+  displayData(currentPage);
+</script>
+--%>
+
 </body>
 </html>

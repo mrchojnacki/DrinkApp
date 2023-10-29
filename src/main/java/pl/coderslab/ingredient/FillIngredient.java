@@ -5,6 +5,7 @@ import pl.coderslab.drink.Drink;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "fill_ingredients")
@@ -55,5 +56,18 @@ public class FillIngredient {
     @Override
     public String toString() {
         return fill + ", " + amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FillIngredient)) return false;
+        FillIngredient that = (FillIngredient) o;
+        return id.equals(that.id) && fill.equals(that.fill) && amount.equals(that.amount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, fill, amount);
     }
 }
