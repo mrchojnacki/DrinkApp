@@ -18,7 +18,7 @@ and insert into file opt/apache-tomcat/conf/context.xml following lines:
 	//<Resources antiResourceLocking="false" cachingAllowed="false" />
 	<WatchedResource>images</WatchedResource>//
 
-in between the <Context> brackets.
+in between the //<Context>// brackets.
 
 The technologies used are: Java 1.8+, Spring MVC, Spring Data, Hibernate, JavaScript, CSS,
 Tomcat 9, MySQL/JPQL, JSP, JSTL, HTTP.
