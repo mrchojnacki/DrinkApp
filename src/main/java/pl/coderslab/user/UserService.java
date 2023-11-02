@@ -82,12 +82,8 @@ public class UserService {
                           HttpServletResponse response) {
         boolean loggedIn = false;
         HttpSession sess = request.getSession(true);
-        if(userLoggingDTO.getLoggingMethod().equals("admin")) {
-            User adminUser = userRepository.findUserToAuthenticate(userLoggingDTO.getLoggingMethod());
-            sess.setAttribute("authenticatedUserId", adminUser.getId());
-            loggedIn = true;
-        }
-        else if (authenticate(userLoggingDTO.getLoggingMethod(), userLoggingDTO.getPassword())) {
+        
+        if (authenticate(userLoggingDTO.getLoggingMethod(), userLoggingDTO.getPassword())) {
             if (userLoggingDTO.isRememberPassword()) {
                 Cookie cookie = new Cookie("password", userLoggingDTO.getPassword());
                 cookie.setMaxAge(60*60*24*30);
