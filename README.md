@@ -15,8 +15,8 @@ ingredients, comments and user ratings, DTO classes were created separately.
 NOTE: Before starting the app please create an empty database called "drinkApp"
 and insert into file opt/apache-tomcat/conf/context.xml following lines:
 
-<Resources antiResourceLocking="false" cachingAllowed="false" />
-	<WatchedResource>images</WatchedResource>
+	//<Resources antiResourceLocking="false" cachingAllowed="false" />
+	<WatchedResource>images</WatchedResource>//
 
 in between the <Context> brackets.
 
