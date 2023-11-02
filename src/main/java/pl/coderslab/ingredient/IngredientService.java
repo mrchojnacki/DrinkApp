@@ -13,27 +13,12 @@ public class IngredientService {
         this.alcoholIngredientRepository = alcoholIngredientRepository;
         this.fillerIngredientRepository = fillerIngredientRepository;
     }
-    public FillIngredient saveNewFillIngredient(FillIngredient fillIngredient) {
-        fillerIngredientRepository.createFillerIngredient(fillIngredient);
-        FillIngredient persistedFillIngredient = fillerIngredientRepository.updateFillerIngredient(fillIngredient);
-        return persistedFillIngredient;
-    }
-    public FillIngredient updateFillIngredient(FillIngredient fillIngredient) {
-        FillIngredient updatedFillIngredient = fillerIngredientRepository.updateFillerIngredient(fillIngredient);
-        return updatedFillIngredient;
-    }
 
 
-    public FillIngredient getFillIngredientById(Long id) {
-        return fillerIngredientRepository.findFillerIngredientById(id);
-    }
     public List<FillIngredient> getFillIngredientByName(String name) {
         return fillerIngredientRepository.findFillerIngredientByName(name);
     }
 
-    public AlcoholIngredient getAlcoholIngredientById(Long id) {
-        return alcoholIngredientRepository.findAlcoholIngredientById(id);
-    }
     public List<AlcoholIngredient> getAlcoholIngredientByName(String name) {
         return alcoholIngredientRepository.findAlcoholIngredientByName(name);
     }

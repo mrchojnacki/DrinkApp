@@ -1,6 +1,5 @@
 package pl.coderslab.comments;
 
-import org.hibernate.annotations.Cascade;
 import pl.coderslab.drink.Drink;
 import pl.coderslab.user.User;
 

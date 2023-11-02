@@ -11,7 +11,7 @@ import java.util.List;
 public class DrinkRequestDTO {
     private String name;
     private String method;
-    private List<AlcoholIngredient> alcoholIngredients =  new AutoPopulatingList<AlcoholIngredient>(new AlcoholIngredientFactory());;
+    private List<AlcoholIngredient> alcoholIngredients =  new AutoPopulatingList<AlcoholIngredient>(new AlcoholIngredientFactory());
     private List<FillIngredient> fillIngredients = new AutoPopulatingList<FillIngredient>(new FillIngredientFactory());
     private String[] existingAlcoholIngredientsIds;
     private String[] existingFillIngredientsIds;

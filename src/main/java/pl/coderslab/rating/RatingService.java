@@ -2,11 +2,12 @@ package pl.coderslab.rating;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class RatingService {
-    private RatingRepository ratingRepository;
+    private final RatingRepository ratingRepository;
 
     public RatingService(RatingRepository ratingRepository) {
         this.ratingRepository = ratingRepository;
@@ -23,5 +24,12 @@ public class RatingService {
 
     public void addNewRating(RatingEntity ratingEntity) {
         ratingRepository.save(ratingEntity);
+    }
+
+    public void deleteRatingsOfDrink(String drinkId) {
+        List<RatingEntity> listOfRatingsOfDrink = ratingRepository.getAllRatingsOfDrinkByDrinkId(Long.parseLong(drinkId));
+        for (RatingEntity ratingEntity : listOfRatingsOfDrink) {
+            ratingRepository.delete(ratingEntity);
+        }
     }
 }

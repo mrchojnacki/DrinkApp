@@ -4,69 +4,67 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+import pl.coderslab.comments.CommentService;
 import pl.coderslab.ingredient.*;
 import pl.coderslab.rating.RatingEntity;
-import pl.coderslab.rating.RatingRepository;
 import pl.coderslab.rating.RatingService;
 import pl.coderslab.user.UserRepository;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class DrinkService {
-    private DrinkRepository drinkRepository;
-    private AlcoholIngredientRepository alcoholIngredientRepository;
-    private FillerIngredientRepository fillerIngredientRepository;
-    private UserRepository userRepository;
-    private IngredientService ingredientService;
+    private final DrinkRepository drinkRepository;
+    private final AlcoholIngredientRepository alcoholIngredientRepository;
+    private final FillerIngredientRepository fillerIngredientRepository;
+    private final UserRepository userRepository;
+    private final IngredientService ingredientService;
 
-    private RatingService ratingService;
+    private final RatingService ratingService;
+    private final ServletContext servletContext;
 
-    public DrinkService(DrinkRepository drinkRepository, AlcoholIngredientRepository alcoholIngredientRepository, FillerIngredientRepository fillerIngredientRepository, UserRepository userRepository, IngredientService ingredientService, RatingService ratingService) {
+    private final CommentService commentService;
+
+    public DrinkService(DrinkRepository drinkRepository, AlcoholIngredientRepository alcoholIngredientRepository, FillerIngredientRepository fillerIngredientRepository, UserRepository userRepository, IngredientService ingredientService, RatingService ratingService, ServletContext servletContext, CommentService commentService) {
         this.drinkRepository = drinkRepository;
         this.alcoholIngredientRepository = alcoholIngredientRepository;
         this.fillerIngredientRepository = fillerIngredientRepository;
         this.userRepository = userRepository;
         this.ingredientService = ingredientService;
         this.ratingService = ratingService;
+        this.servletContext = servletContext;
+        this.commentService = commentService;
     }
 
     public boolean checkIfDrinkNameAlreadyInDb(String name) {
         boolean nameTaken = false;
-        for (Drink d : drinkRepository.findAll()) {
-            if (d.getName().toLowerCase().equals(name.toLowerCase())) {
+        for (Drink d : drinkRepository.findAll())
+            if (d.getName().equalsIgnoreCase(name)) {
                 nameTaken = true;
+                break;
             }
-        }
         return nameTaken;
     }
 
-    public Drink addDrinkToDb(DrinkRequestDTO drinkRequestDTOFromController, HttpSession sess) {
+    public void addDrinkToDb(DrinkRequestDTO drinkRequestDTOFromController, HttpSession sess) {
         Drink newDrink = new Drink();
         Drink drinkToAdd = manageDrinkFromAddEdit(newDrink, drinkRequestDTOFromController, sess);
         drinkRepository.save(drinkToAdd);
-        return  drinkToAdd;
     }
 
-    public Drink editDrinkToDb(DrinkRequestDTO drinkRequestDTOFromController, HttpSession sess, String drinkId) {
+    public void editDrinkToDb(DrinkRequestDTO drinkRequestDTOFromController, HttpSession sess, String drinkId) {
         Drink drinkToEdit = drinkRepository.findById(Long.parseLong(drinkId)).orElse(null);
         Drink editedDrink = manageDrinkFromAddEdit(drinkToEdit, drinkRequestDTOFromController, sess);
         drinkRepository.save(editedDrink);
-        return editedDrink;
     }
 
     private Drink manageDrinkFromAddEdit(Drink managedDrink, DrinkRequestDTO drinkRequestDTO, HttpSession sess) {
@@ -90,20 +88,35 @@ public class DrinkService {
         return managedDrink;
     }
 
-    public void saveImageToDirectory(MultipartFile image, String name) {
-        Long id = drinkRepository.getDrinkByName(name).map(Drink::getId).orElse(null);
-        String uploadPath = "/home/micha/Projekty/DrinkApp/src/main/webapp/images/";
+    public void deleteDrink(String drinkId) {
+        deleteImageOfDrink(drinkId);
+        commentService.deleteComments(drinkId);
+        ratingService.deleteRatingsOfDrink(drinkId);
+        drinkRepository.delete(Objects.requireNonNull(drinkRepository.findById(Long.parseLong(drinkId)).orElse(null)));
+    }
+
+    public void saveImageToDirectory(MultipartFile image, String drinkId) {
+        String imagePath1 = servletContext.getRealPath("/images") + "/" + drinkId;
+        String[] pathArray = imagePath1.split("target");
+        String imagePath2 = pathArray[0] + "src/main/webapp/images/" + drinkId;
         try {
-            File directory = new File(uploadPath);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-            String imagePath = uploadPath + id.toString();
-            FileOutputStream fos = new FileOutputStream(imagePath);
+            FileOutputStream fos = new FileOutputStream(imagePath1);
+            FileCopyUtils.copy(image.getInputStream(), fos);
+            fos = new FileOutputStream(imagePath2);
             FileCopyUtils.copy(image.getInputStream(), fos);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void deleteImageOfDrink(String drinkId) {
+        String imagePath1 = servletContext.getRealPath("/images") + "/" + drinkId;
+        String[] pathArray = imagePath1.split("target");
+        String imagePath2 = pathArray[0] + "src/main/webapp/images/" + drinkId;
+        File image1 = new File(imagePath1);
+        image1.delete();
+        File image2 = new File(imagePath2);
+        image2.delete();
     }
 
     public String[] removeEmptyStrings(String[] array) {
@@ -134,14 +147,18 @@ public class DrinkService {
         List<Drink> allDrinkInDb = drinkRepository.findAll();
         List<DrinkResponseDTO> listOfDrinkUserCanMake = new ArrayList<>();
         List<FillIngredient> fillIngredientListFromForm = new ArrayList<>();
-        Arrays.stream(alcoholNames).map(n -> fillIngredientListFromForm.addAll(ingredientService.getFillIngredientByName(n)));
+        for (String name : fillerNames) {
+            fillIngredientListFromForm.addAll(ingredientService.getFillIngredientByName(name));
+        }
 
         List<AlcoholIngredient> alcoholIngredientListFromForm = new ArrayList<>();
-        Arrays.stream(fillerNames).map(n -> alcoholIngredientListFromForm.addAll(alcoholIngredientRepository.findAlcoholIngredientByName(n)));
+        for (String name : alcoholNames) {
+            alcoholIngredientListFromForm.addAll(ingredientService.getAlcoholIngredientByName(name));
+        }
 
         for (Drink d : allDrinkInDb) {
             int noOfIngredientsOfDrink = drinkRepository.getCountOfAlcoholIngredientsOfDrink(d.getId()) + drinkRepository.getCountOfFillerIngredientsOfDrink(d.getId());
-            int counter= getCounterOfMatchIngredients(d, fillIngredientListFromForm, alcoholIngredientListFromForm);
+            int counter = getCounterOfMatchIngredients(d, fillIngredientListFromForm, alcoholIngredientListFromForm);
             if (counter==noOfIngredientsOfDrink) {
                 listOfDrinkUserCanMake.add(getDrinkResponseDTOFromId(d.getId().toString()));
             }
@@ -150,14 +167,18 @@ public class DrinkService {
     }
 
     public List<DrinkResponseDTO> getDrinkUserCanMakeMinusOne(String[] alcoholNames,
-                                                      String[] fillerNames) {
+                                                             String[] fillerNames) {
         List<Drink> allDrinkInDb = drinkRepository.findAll();
         List<DrinkResponseDTO> listOfDrinkUserCanMakeMinusOne = new ArrayList<>();
         List<FillIngredient> fillIngredientListFromForm = new ArrayList<>();
-        Arrays.stream(alcoholNames).map(n -> fillIngredientListFromForm.addAll(ingredientService.getFillIngredientByName(n)));
+        for (String name : fillerNames) {
+            fillIngredientListFromForm.addAll(ingredientService.getFillIngredientByName(name));
+        }
 
         List<AlcoholIngredient> alcoholIngredientListFromForm = new ArrayList<>();
-        Arrays.stream(fillerNames).map(n -> alcoholIngredientListFromForm.addAll(alcoholIngredientRepository.findAlcoholIngredientByName(n)));
+        for (String name : alcoholNames) {
+            alcoholIngredientListFromForm.addAll(ingredientService.getAlcoholIngredientByName(name));
+        }
 
         for (Drink d : allDrinkInDb) {
             int noOfIngredientsOfDrink = drinkRepository.getCountOfAlcoholIngredientsOfDrink(d.getId()) + drinkRepository.getCountOfFillerIngredientsOfDrink(d.getId());
@@ -174,10 +195,13 @@ public class DrinkService {
         List<Drink> allDrinkInDb = drinkRepository.findAll();
         List<DrinkResponseDTO> listOfDrinkUserCanMakeMinusTwo = new ArrayList<>();
         List<FillIngredient> fillIngredientListFromForm = new ArrayList<>();
-        Arrays.stream(alcoholNames).map(n -> fillIngredientListFromForm.addAll(ingredientService.getFillIngredientByName(n)));
-
+        for (String name : fillerNames) {
+            fillIngredientListFromForm.addAll(ingredientService.getFillIngredientByName(name));
+        }
         List<AlcoholIngredient> alcoholIngredientListFromForm = new ArrayList<>();
-        Arrays.stream(fillerNames).map(n -> alcoholIngredientListFromForm.addAll(alcoholIngredientRepository.findAlcoholIngredientByName(n)));
+        for (String name : alcoholNames) {
+            alcoholIngredientListFromForm.addAll(ingredientService.getAlcoholIngredientByName(name));
+        }
 
         for (Drink d : allDrinkInDb) {
             int noOfIngredientsOfDrink = drinkRepository.getCountOfAlcoholIngredientsOfDrink(d.getId()) + drinkRepository.getCountOfFillerIngredientsOfDrink(d.getId());
@@ -271,8 +295,9 @@ public class DrinkService {
         boolean isInFavoriteList = false;
         List<Drink> listOfFavoriteDrinksOfUser = userRepository.getFavoriteDrinksOfUser((Long)sess.getAttribute("authenticatedUserId"));
         for (Drink d : listOfFavoriteDrinksOfUser) {
-            if (d.getId()==drinkId) {
+            if (d.getId() == drinkId) {
                 isInFavoriteList = true;
+                break;
             }
         }
         return isInFavoriteList;

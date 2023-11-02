@@ -1,6 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<jsp:useBean id="current" class="java.util.Date" />
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,14 +21,20 @@
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
   <a class="navbar-brand ps-3" href="/">Drink App</a>
   <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-  <!-- Navbar-->
   <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-        <li><a class="dropdown-item" href="/myAccount">My Account</a></li>
-        <li><hr class="dropdown-divider" /></li>
-        <li><a class="dropdown-item" href="#!">Logout</a></li>
+        <c:choose>
+          <c:when test="${isLogged==true}">
+            <li><a class="dropdown-item" href="/myAccount">My Account</a></li>
+            <li><hr class="dropdown-divider"/></li>
+            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+          </c:when>
+          <c:otherwise>
+            <li><a class="dropdown-item" href="/login">Log in</a></li>
+          </c:otherwise>
+        </c:choose>
       </ul>
     </li>
   </ul>
@@ -68,75 +76,86 @@
   <div id="layoutSidenav_content">
     <main>
       <div class="container-fluid px-4">
-        <h1 class="mt-4">All Drinks</h1>
+        <h1 class="mt-4">Possible Drinks</h1>
         <div class="row">
-          <div class="col-xl-2">
+          <div class="col-xl-3">
             <div class="card mb-4 align-middle align-items-center">
-              <h5>#</h5>
+              <h5>Drinks You Can Make</h5>
             </div>
           </div>
           <div class="col-xl-3">
             <div class="card mb-4 align-middle align-items-center">
-              <h5>Name</h5>
+              <h5>Drinks For Which You Lack 1 Ingredient</h5>
             </div>
           </div>
-          <div class="col-xl-6">
+          <div class="col-xl-3">
             <div class="card mb-4 align-middle align-items-center">
-              <h5>Image</h5>
+              <h5>Drinks For Which You Lack 2 Ingredients</h5>
             </div>
           </div>
         </div>
-        <c:forEach var="drink" items="${pageOfDrinks.content}">
-          <c:set var="imageUrl" value="/images/${drink.id}" />
-          <div class="row align-items-center align-middle">
-            <div class="col-xl-2">
-              <div class="card mb-4 align-middle align-items-center">
-                <h5>${drink.id}</h5>
-              </div>
-            </div>
-            <div class="col-xl-3">
-              <div class="card mb-4 align-middle align-items-center">
-                <h5><a href="/list/drink/${drink.id}">${drink.name}</a></h5>
-              </div>
-            </div>
-            <c:choose>
-              <c:when test="${not empty imageUrl}">
-                <div class="col-xl-6">
-                  <div class="card mb-4">
-                    <div class="container1 align-items-center">
-                      <img class="scaled-image" src="${imageUrl}">
-                    </div>
-                  </div>
-                </div>
-              </c:when>
-              <c:otherwise>
-                <div class="col-xl-6">
-                  <div class="card mb-4">
-                    <div class="container1 align-items-center">
-                      <img class="scaled-image" src="/images/no">
-                    </div>
-                  </div>
-                </div>
-              </c:otherwise>
-            </c:choose>
-          </div>
-        </c:forEach>
         <div class="row">
-          <nav aria-label="Page navigation">
-            <ul class="pagination">
-              <c:if test="${pageNumber!=1}">
-                <li class="page-item"><a class="page-link" href="/userList/page/${pageNumber-1}">Previous</a></li>
-              </c:if>
-              <c:forEach var = "i" begin = "1" end = "${noOfPages}">
-                <li class="page-item"><a class="page-link" href="/userList/page/${i}">${i}</a></li>
-              </c:forEach>
-              <c:if test="${pageNumber!=noOfPages&&userQuantity>5}">
-                <li class="page-item"><a class="page-link" href="/userList/page/${pageNumber+1}">Next</a></li>
-              </c:if>
-            </ul>
-          </nav>
+        <div class="col-xl-3">
+        <c:forEach var="drink" items="${drinksUserCanMake}">
+          <c:set var="imageUrl" value="/images/${drink.id}?_=${current.time}" />
+              <div class="card mb-4">
+                <div class="container2 align-items-center">
+                <div class="row"><h5><a class="align-middle align-items-center" href="/list/drink/${drink.id}">${drink.name}</a></h5>
+                </div>
+              <c:choose>
+                <c:when test="${not empty imageUrl}">
+                        <div class="row"><img class="scaled-image" src="${imageUrl}"></div>
+                </c:when>
+                <c:otherwise>
+                        <div class="row"><img class="scaled-image" src="/images/no"></div>
+                </c:otherwise>
+              </c:choose>
+                </div>
+              </div>
+        </c:forEach>
+        </div>
+        <div class="col-xl-3">
+          <c:forEach var="drink" items="${drinksUserCanMakeMinusOne}">
+            <c:set var="imageUrl" value="/images/${drink.id}?_=${current.time}" />
+            <div class="card mb-4">
+            <div class="container2 align-items-center">
+              <div class="row"><h5><a class="align-middle align-items-center" href="/list/drink/${drink.id}">${drink.name}</a></h5>
+              <br>
+              <c:choose>
+                <c:when test="${not empty imageUrl}">
+                  <div class="row"><img class="scaled-image" src="${imageUrl}"></div>
+                </c:when>
+                <c:otherwise>
+                  <div class="row"><img class="scaled-image" src="/images/no"></div>
+                </c:otherwise>
+              </c:choose>
+            </div>
+          </div>
+            </div>
+          </c:forEach>
+        </div>
+        <div class="col-xl-3">
+          <c:forEach var="drink" items="${drinksUserCanMakeMinusTwo}">
+            <c:set var="imageUrl" value="/images/${drink.id}?_=${current.time}" />
+            <div class="card mb-4">
+              <div class="container2 align-items-center">
+                <div class="row"><h5><a class="align-middle align-items-center" href="/list/drink/${drink.id}">${drink.name}</a></h5>
+                <br>
+                <c:choose>
+                  <c:when test="${not empty imageUrl}">
+                    <div class="row"><img class="scaled-image" src="${imageUrl}"></div>
+                  </c:when>
+                  <c:otherwise>
+                    <div class="row"><img class="scaled-image" src="/images/no"></div>
+                  </c:otherwise>
+                </c:choose>
+              </div>
+            </div>
+          </c:forEach>
         </div>
       </div>
+      </div>
+    </div>
     </main>
     <footer class="py-4 bg-light mt-auto">
       <div class="container-fluid px-4">

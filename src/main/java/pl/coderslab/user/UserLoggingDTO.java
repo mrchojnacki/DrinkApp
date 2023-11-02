@@ -10,14 +10,6 @@ public class UserLoggingDTO {
     private String password;
     private boolean rememberPassword;
 
-    public UserLoggingDTO(String loggingMethod, String password, boolean rememberPassword) {
-        this.loggingMethod = loggingMethod;
-        this.password = password;
-        this.rememberPassword = rememberPassword;
-    }
-
-    public UserLoggingDTO() {
-    }
 
     public String getLoggingMethod() {
         return loggingMethod;

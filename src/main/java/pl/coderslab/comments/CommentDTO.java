@@ -1,6 +1,5 @@
 package pl.coderslab.comments;
 
-import java.time.LocalDateTime;
 
 public class CommentDTO {
     private String commentContent;

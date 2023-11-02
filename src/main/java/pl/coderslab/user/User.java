@@ -25,8 +25,6 @@ public class User {
     private LocalDateTime createdOn;
     private LocalDateTime lastUpdatedOn;
 
-    //private String paymentMethod;
-
 
     @ManyToMany
     @JoinTable(name = "users_drinks",

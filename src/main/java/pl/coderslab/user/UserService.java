@@ -126,6 +126,9 @@ public class UserService {
     }
 
     public void logout(HttpSession sess) {
+        sess.removeAttribute("isLogged");
+        sess.removeAttribute("authenticatedUserId");
+        sess.removeAttribute("authenticatedUserName");
         sess.invalidate();
     }
 

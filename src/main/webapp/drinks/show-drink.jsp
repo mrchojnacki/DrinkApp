@@ -1,12 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: micha
-  Date: 29.09.2023
-  Time: 18:23
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<jsp:useBean id="current" class="java.util.Date" />
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,33 +14,20 @@
     <meta name="author" content="" />
     <title>Dashboard - SB Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="/css/styles.css" rel="stylesheet" /><%--
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
---%>
+    <link href="/css/styles.css" rel="stylesheet" />
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-    <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="/">Home</a>
-    <!-- Sidebar Toggle-->
+    <a class="navbar-brand ps-3" href="/">Drink App</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-    <!-- Navbar Search-->
-    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-        <div class="input-group">
-            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-            <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
-        </div>
-    </form>
-    <!-- Navbar-->
     <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                 <c:choose>
-                    <c:when test="${isLogged=!null}">
+                    <c:when test="${isLogged==true}">
                         <li><a class="dropdown-item" href="/myAccount">My Account</a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <li><a class="dropdown-item" href="/logout">Logout</a></li>
@@ -63,15 +46,11 @@
             <div class="sb-sidenav-menu">
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading">Menu</div>
-                    <a class="nav-link" href="/">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Dashboard
-                    </a>
                     <a class="nav-link" href="/list">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         All Drinks
                     </a>
-                    <c:if test="${isLogged=!null}">
+                    <c:if test="${isLogged==true}">
                     <a class="nav-link" href="/favList">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         Favorite Drinks
@@ -81,14 +60,14 @@
                         Drinks Created By You
                     </a>
                     </c:if>
-                    <a class="nav-link" href="../htmls/index.html">
+                    <a class="nav-link" href="/possibleDrink">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        All Ingredients
+                        What kind of drink can you create?
                     </a>
                 </div>
             </div>
             <div class="sb-sidenav-footer">
-                <c:if test="${isLogged!=null}">
+                <c:if test="${isLogged==true}">
                 <div class="small">Logged in as:</div>
                 ${authenticatedUserName}
                 </c:if>
@@ -104,8 +83,8 @@
                 </div>
                 <div class="col-xl-3">
                 <div class="container">
-                    <c:if test="${isLogged=!null}">
-                        <div class="rating-box">
+                    <c:if test="${isLogged==true}">
+                        <div class="rating-box align-middle align-items-center">
                         <header>Rate This Drink!</header>
                         <div class="stars">
                             <i class="fa-solid fa-star"></i>
@@ -117,7 +96,9 @@
                     </div>
                     <input type="hidden" name="rating" id="rating">
                     </c:if>
-                    <h4 class="justify-content-center">${avgRating}</h4>
+                    <div class="card mb-4 align-middle align-items-center">
+                    <h4 class="justify-content-center">Rating: ${avgRating}</h4>
+                    </div>
                 </div>
                 </div>
                     <div class="col-xl-1">
@@ -137,6 +118,12 @@
                         <div class="col-xl-2">
                             <a href="/editDrink/${drink.id}">
                                 <button class="btn btn-info">Edit Your Drink</button>
+                            </a>
+                            <br>
+                            <br>
+                            <br>
+                            <a href="/delete/${drink.id}">
+                                <button class="btn btn-danger">Delete This Drink</button>
                             </a>
                         </div>
                     </c:if>
@@ -165,14 +152,16 @@
                     </ul>
                 </div>
                 <div class="col-xl-5">
-                    <img src="/images/${drink.id}">
+                    <img src="/images/${drink.id}?_=${current.time}">
                 </div>
             </div>
             </div>
             <div class="container-fluid px-4">
-            <div class="row">
+            <div class="row align-items-center align-middle">
+                <div class="col-lg-8">
                 <c:out value="${drink.method}"/>
                 </div>
+            </div>
             </div>
             <section style="background-color: #eee;">
                 <div class="container my-5 py-5">
@@ -180,7 +169,7 @@
                         <div class="col-md-12 col-lg-10 col-xl-8">
                             <div class="card">
                                 <c:choose>
-                                    <c:when test="${commentList!=null}">
+                                    <c:when test="${commentList!=null|| not empty commentList}">
                                         <c:forEach var="comment" items="${commentList}">
                                             <div class="card-body">
                                                 <div class="d-flex flex-start align-items-center">
@@ -194,12 +183,6 @@
                                                 <p class="mt-3 mb-4 pb-2">
                                                         ${comment.commentContent}
                                                 </p>
-                                                <div class="small d-flex justify-content-start">
-                                                    <a href="#!" class="d-flex align-items-center me-3">
-                                                        <i class="far fa-thumbs-up me-2"></i>
-                                                        <p class="mb-0">Like</p>
-                                                    </a>
-                                                </div>
                                             </div>
                                         </c:forEach>
                                         </c:when>
@@ -212,7 +195,7 @@
                                     </c:otherwise>
                                 </c:choose>
                                 <c:choose>
-                                <c:when test="${isLogged!=null}">
+                                <c:when test="${isLogged==true}">
                                 <form action="/addComment" method="post">
                                 <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
                                     <div class="d-flex flex-start w-100">
@@ -246,11 +229,6 @@
             <div class="container-fluid px-4">
                 <div class="d-flex align-items-center justify-content-between small">
                     <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                    <div>
-                        <a href="#">Privacy Policy</a>
-                        &middot;
-                        <a href="#">Terms &amp; Conditions</a>
-                    </div>
                 </div>
             </div>
         </footer>
@@ -263,7 +241,6 @@
 <script src="/js/scripts.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-<script src="/js/datatables-simple-demo.js"></script>
 <script src="/js/addons/rating.js"></script>
 </body>
 </html>

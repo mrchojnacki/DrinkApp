@@ -14,27 +14,16 @@ public class AlcoholIngredientRepository {
     private EntityManager entityManager;
 
     public List<AlcoholIngredient> findAllAlcoholIngredients() {
-        return (List<AlcoholIngredient>) entityManager.createQuery("select ai from AlcoholIngredient ai", AlcoholIngredient.class).getResultList();
+        return entityManager.createQuery("select ai from AlcoholIngredient ai", AlcoholIngredient.class).getResultList();
     }
     public AlcoholIngredient findAlcoholIngredientById(Long id){
         return entityManager.find(AlcoholIngredient.class, id);
     }
-    public AlcoholIngredient createAlcoholIngredient(AlcoholIngredient alcoholIngredient) {
-        return entityManager.merge(alcoholIngredient);
-    }
-    public AlcoholIngredient updateAlcoholIngredient(AlcoholIngredient alcoholIngredient) {
-        return entityManager.merge(alcoholIngredient);
-    }
-    public void deleteAlcoholIngredient(Long id) {
-        entityManager.remove(findAlcoholIngredientById(id));
-    }
     public List<AlcoholIngredient> findAlcoholIngredientByName(String name) {
-        return (List<AlcoholIngredient>) entityManager.createQuery("select ai from AlcoholIngredient ai where ai.alcoholType =:name")
+        return (List<AlcoholIngredient>) entityManager.createQuery("select ai from AlcoholIngredient ai where upper(ai.alcoholType) = upper(:name)")
                 .setParameter("name", name)
                 .getResultList();
     }
-    public List<AlcoholIngredient> findDistinctFillerIngredientNames() {
-        return (List<AlcoholIngredient>) entityManager.createQuery("select distinct ai.alcoholType from AlcoholIngredient ai").getResultList();
-    }
+
 
 }

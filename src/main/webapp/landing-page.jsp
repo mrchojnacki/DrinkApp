@@ -1,10 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: micha
-  Date: 29.09.2023
-  Time: 18:23
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,11 +16,9 @@
 </head>
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-  <!-- Navbar Brand-->
   <a class="navbar-brand ps-3" href="htmls/index.html">Start Bootstrap</a>
-  <!-- Sidebar Toggle-->
   <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-  <!-- Navbar Search-->
+
   <div class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
     <a class="navbar-brand ps-3" href="/login">Log In</a>
     <a class="navbar-brand ps-3" href="/register">Register</a>
@@ -38,14 +30,13 @@
       <div class="sb-sidenav-menu">
         <div class="nav">
           <div class="sb-sidenav-menu-heading">Menu</div>
-          <!-- Get ALL Drinks-->
           <a class="nav-link" href="/list">
             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
             All Drinks
           </a>
-          <a class="nav-link" href="htmls/index.html">
+          <a class="nav-link" href="/possibleDrink">
             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-            All Ingredients
+            What kind of drink can you create?
           </a>
         </div>
       </div>
@@ -55,18 +46,17 @@
     <main>
       <div class="container-fluid px-4">
         <h1 class="mt-4">DrinkApp</h1>
-
         <div class="row">
             <div class="card mb-4">
               <div class="card-header">
                 <i class="fas fa-chart-area me-1"></i>
                 About
               </div>
-              Welcome to the Drink App!!!
-              In this application you can create your own account, search for drinks from the existing database powered by Hibernate, create your own drinks, manage them, add them to the database. You can rate, comment and add to favorites any drinks you search for. An additional option provided by our application is the ability to list the ingredients you keep in your fridge or in your home bar and check what drink you can make right away and what individual ingredients you are missing to create your unique drink for tonight!
+              <h3>Welcome to the Drink App!!!</h3>
+              <h6>In this application you can create your own account, search for drinks from the existing database powered by Hibernate, create your own drinks, manage them, add them to the database. You can rate, comment and add to favorites any drinks you search for. An additional option provided by our application is the ability to list the ingredients you keep in your fridge or in your home bar and check what drink you can make right away and what individual ingredients you are missing to create your unique drink for tonight!
               The drinks have their own graphics and when adding a drink to the application, you can also upload your own photo.
               Everything is divided into layers using services, controllers and repositories, and DTO classes have been created separately.
-              The technologies used are: Java 1.8+, Spring MVC, Spring Data, Hibernate, JavaScript, CSS, Tomcat, MySQL/JPQL, JSP, JSTL, HTTP.
+              The technologies used are: Java 1.8+, Spring MVC, Spring Data, Hibernate, JavaScript, CSS, Tomcat, MySQL/JPQL, JSP, JSTL, HTTP.</h6>
               </div>
         </div>
       </div>
@@ -75,11 +65,7 @@
       <div class="container-fluid px-4">
         <div class="d-flex align-items-center justify-content-between small">
           <div class="text-muted">Copyright &copy; Your Website 2023</div>
-          <div>
-            <a href="#">Privacy Policy</a>
-            &middot;
-            <a href="#">Terms &amp; Conditions</a>
-          </div>
+
         </div>
       </div>
     </footer>

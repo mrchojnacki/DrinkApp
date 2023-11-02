@@ -1,7 +1,5 @@
 package pl.coderslab.rating;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.Formula;
 import pl.coderslab.drink.Drink;
 import pl.coderslab.user.User;
 

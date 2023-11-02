@@ -17,7 +17,7 @@ import javax.validation.Valid;
 @Controller
 @Transactional
 public class UserController {
-    private UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;

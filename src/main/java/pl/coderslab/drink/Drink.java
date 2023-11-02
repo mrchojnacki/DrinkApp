@@ -1,7 +1,6 @@
 package pl.coderslab.drink;
 
 
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import pl.coderslab.comments.CommentEntity;

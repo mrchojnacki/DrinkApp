@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.coderslab.comments.CommentService;
 import pl.coderslab.ingredient.*;
 import pl.coderslab.rating.RatingService;
-import pl.coderslab.user.UserRepository;
 import pl.coderslab.user.UserService;
 
 import javax.servlet.annotation.MultipartConfig;
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @Transactional
@@ -184,16 +184,28 @@ public class DrinkController {
         model.addAttribute("name", name);
         model.addAttribute("method", method);
 
-        existingAlcoholIds = drinkService.removeEmptyStrings(existingAlcoholIds);
-        existingFillIds = drinkService.removeEmptyStrings(existingFillIds);
-        newAlcoholName = drinkService.removeEmptyStrings(newAlcoholName);
-        newAlcoholVolume = drinkService.removeEmptyStrings(newAlcoholVolume);
-        newFillName = drinkService.removeEmptyStrings(newFillName);
-        newFillAmount = drinkService.removeEmptyStrings(newFillAmount);
+        if (existingAlcoholIds!=null) {
+            existingAlcoholIds = drinkService.removeEmptyStrings(existingAlcoholIds);
+        }
+        if(existingFillIds!=null) {
+            existingFillIds = drinkService.removeEmptyStrings(existingFillIds);
+        }
+        if (newAlcoholName!=null) {
+            newAlcoholName = drinkService.removeEmptyStrings(newAlcoholName);
+        }
+        if (newAlcoholVolume!=null) {
+            newAlcoholVolume = drinkService.removeEmptyStrings(newAlcoholVolume);
+        }
+        if (newFillName!=null) {
+            newFillName = drinkService.removeEmptyStrings(newFillName);
+        }
+        if (newFillAmount!=null) {
+            newFillAmount = drinkService.removeEmptyStrings(newFillAmount);
+        }
 
         if (newAlcoholName!=null) {
             try {
-                for (String s : newAlcoholVolume) {
+                for (String s : newAlcoholVolume != null ? newAlcoholVolume : new String[0]) {
                     Integer.parseInt(s);
                 }
             } catch (NumberFormatException e) {
@@ -210,18 +222,22 @@ public class DrinkController {
             model.addAttribute("nameError", "Name of your drink should be at least 3 characters long");
             return "/form/addNewDrink.jsp";
         }
+        if (existingAlcoholIds==null&&existingFillIds==null&&newAlcoholName==null&&newFillName==null) {
+            if (newAlcoholName.length!=newAlcoholVolume.length || newFillName.length!=newFillAmount.length) {
+                model.addAttribute("nonInPairIngredientInputAmountError", "Make sure you have paired all new ingredients with their quantities");
+                return "/form/addNewDrink.jsp";
+            }
+            if (existingAlcoholIds.length==0&&existingFillIds.length==0&&newAlcoholName.length==0&&newFillName.length==0) {
+                model.addAttribute("noIngredientsError", "Add at least one ingredient");
+                return "/form/addNewDrink.jsp";
+            }
+        }
         if (drinkService.checkIfDrinkNameAlreadyInDb(name)) {
             model.addAttribute("nameTakenError", "Drink with this name already exists");
             return "/form/addNewDrink.jsp";
         }
-        if (existingAlcoholIds==null&&existingFillIds==null&&newAlcoholName==null&&newFillName==null) {
-            model.addAttribute("noIngredientsError", "Add at least one ingredient");
-            return "/form/addNewDrink.jsp";
-        }
-        if (newAlcoholName.length!=newAlcoholVolume.length || newFillName.length!=newFillAmount.length) {
-            model.addAttribute("nonInPairIngredientInputAmountError", "Make sure you have paired all new ingredients with their quantities");
-            return "/form/addNewDrink.jsp";
-        }
+
+
         DrinkRequestDTO drinkRequestDTO = new DrinkRequestDTO(
                 name,
                 method,
@@ -232,7 +248,7 @@ public class DrinkController {
         drinkService.addDrinkToDb(drinkRequestDTO, sess);
         String drinkId = drinkService.getDrinkIdFromName(name).toString();
         if(!image.isEmpty()) {
-            drinkService.saveImageToDirectory(image, name);
+            drinkService.saveImageToDirectory(image, drinkId);
         }
         return "redirect:/list/drink/" + drinkId;
     }
@@ -261,10 +277,29 @@ public class DrinkController {
                                 @RequestParam String drinkId,
                                 Model model,
                                 HttpSession sess) {
-        List<AlcoholIngredient> newAlcoholIngredients = new ArrayList<>();
         model.addAttribute("alcoholIngredients", ingredientService.getAllAlcoholIngredients());
         model.addAttribute("fillIngredients", ingredientService.getAllFillIngredients());
         model.addAttribute("drink", drinkService.getDrinkResponseDTOFromId(drinkId));
+
+        if (existingAlcoholIds!=null) {
+            existingAlcoholIds = drinkService.removeEmptyStrings(existingAlcoholIds);
+        }
+        if(existingFillIds!=null) {
+            existingFillIds = drinkService.removeEmptyStrings(existingFillIds);
+        }
+        if (newAlcoholName!=null) {
+            newAlcoholName = drinkService.removeEmptyStrings(newAlcoholName);
+        }
+        if (newAlcoholVolume!=null) {
+            newAlcoholVolume = drinkService.removeEmptyStrings(newAlcoholVolume);
+        }
+        if (newFillName!=null) {
+            newFillName = drinkService.removeEmptyStrings(newFillName);
+        }
+        if (newFillAmount!=null) {
+            newFillAmount = drinkService.removeEmptyStrings(newFillAmount);
+        }
+        List<AlcoholIngredient> newAlcoholIngredients = new ArrayList<>();
         if (newAlcoholName!=null) {
             try {
                 for (String s : newAlcoholVolume) {
@@ -289,12 +324,14 @@ public class DrinkController {
             return "/form/editDrink.jsp";
         }
         if (existingAlcoholIds==null&&existingFillIds==null&&newAlcoholName==null&&newFillName==null) {
-            model.addAttribute("noIngredientsError", "Add at least one ingredient");
-            return "/form/editDrink.jsp";
-        }
-        if (newAlcoholName.length!=newAlcoholVolume.length || newFillName.length!=newFillAmount.length) {
-            model.addAttribute("nonInPairIngredientInputAmountError", "Make sure you have paired all new ingredients with their quantities");
-            return "/form/editDrink.jsp";
+            if (newAlcoholName.length!=newAlcoholVolume.length || newFillName.length!=newFillAmount.length) {
+                model.addAttribute("nonInPairIngredientInputAmountError", "Make sure you have paired all new ingredients with their quantities");
+                return "/form/editDrink.jsp";
+            }
+            if (existingAlcoholIds.length==0&&existingFillIds.length==0&&newAlcoholName.length==0&&newFillName.length==0) {
+                model.addAttribute("noIngredientsError", "Add at least one ingredient");
+                return "/form/addNewDrink.jsp";
+            }
         }
         DrinkRequestDTO drinkRequestDTO = new DrinkRequestDTO(
                 name,
@@ -305,17 +342,56 @@ public class DrinkController {
                 existingFillIds);
         drinkService.editDrinkToDb(drinkRequestDTO, sess, drinkId);
         if(!image.isEmpty()) {
-            drinkService.saveImageToDirectory(image, name);
+            drinkService.saveImageToDirectory(image, drinkId);
         }
         return "redirect:/list/drink/" + drinkId;
+    }
+
+    @GetMapping("/delete/{drinkId}")
+    public String deleteDrink(@PathVariable String drinkId,
+                              HttpSession sess,
+                              Model model) {
+        if (sess.getAttribute("authenticatedUserId")==null) {
+            return "/landing-page.jsp";
+        }
+        model.addAttribute("drinkId", drinkId);
+        return "/form/delete.jsp";
+    }
+
+    @PostMapping("/delete")
+    public String deleteDrink(@RequestParam String drinkId,
+                              HttpSession sess) {
+        if (sess.getAttribute("authenticatedUserId")==null) {
+            return "/landing-page.jsp";
+        }
+        drinkService.deleteDrink(drinkId);
+        return  "redirect:/";
     }
 
     @GetMapping("/possibleDrink")
     public String possibleDrinkForm(Model model) {
         List<AlcoholIngredient> alcoholIngredientList = ingredientService.getAllAlcoholIngredients();
         List<FillIngredient> fillIngredientList = ingredientService.getAllFillIngredients();
-        model.addAttribute("alcoholIngredients", alcoholIngredientList);
-        model.addAttribute("fillIngredients", fillIngredientList);
+        List<String> alcoholIngredientDistinctNames = alcoholIngredientList.stream()
+                                                                            .map(AlcoholIngredient::getAlcoholType)
+                                                                            .distinct()
+                                                                            .collect(Collectors.toList());
+        List<String> fillerIngredientDistinctNames = fillIngredientList.stream()
+                                                                        .map(FillIngredient::getFill)
+                                                                        .distinct()
+                                                                        .collect(Collectors.toList());
+        model.addAttribute("alcoholIngredients", alcoholIngredientDistinctNames);
+        model.addAttribute("fillIngredients", fillerIngredientDistinctNames);
         return "/form/possibleDrink.jsp";
+    }
+
+    @PostMapping("/possibleDrink")
+    public String possibleDrinkPost(@RequestParam(required = false) String[] existingAlcoholNames,
+                                    @RequestParam(required = false) String[] existingFillNames,
+                                    Model model) {
+        model.addAttribute("drinksUserCanMake", drinkService.getDrinkUserCanMake(existingAlcoholNames, existingFillNames));
+        model.addAttribute("drinksUserCanMakeMinusOne", drinkService.getDrinkUserCanMakeMinusOne(existingAlcoholNames, existingFillNames));
+        model.addAttribute("drinksUserCanMakeMinusTwo", drinkService.getDrinkUserCanMakeMinusTwo(existingAlcoholNames, existingFillNames));
+        return "/drinks/list-of-possible-drinks.jsp";
     }
 }

@@ -13,9 +13,9 @@ import java.util.List;
 
 @Service
 public class CommentService {
-    private CommentsRepository commentsRepository;
-    private DrinkRepository drinkRepository;
-    private UserRepository userRepository;
+    private final CommentsRepository commentsRepository;
+    private final DrinkRepository drinkRepository;
+    private final UserRepository userRepository;
 
     public CommentService(CommentsRepository commentsRepository, DrinkRepository drinkRepository, UserRepository userRepository) {
         this.commentsRepository = commentsRepository;
@@ -51,5 +51,11 @@ public class CommentService {
     private String formatDateForComment(LocalDateTime createdOn) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return createdOn.format(formatter);
+    }
+    public void deleteComments(String drinkId) {
+        List<CommentEntity> drinkComments = commentsRepository.getCommentEntitiesForDrinkFromDrinkId(Long.parseLong(drinkId));
+        for (CommentEntity c : drinkComments) {
+            commentsRepository.delete(c);
+        }
     }
 }
