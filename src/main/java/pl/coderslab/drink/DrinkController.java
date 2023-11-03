@@ -218,8 +218,12 @@ public class DrinkController {
         if (newFillName!=null) {
              newFillIngredients = drinkService.castingNewFillIngredients(newFillName, newFillAmount);
         }
-        if (name.length()<3) {
+        if (name.length()<3||name==null) {
             model.addAttribute("nameError", "Name of your drink should be at least 3 characters long");
+            return "/form/addNewDrink.jsp";
+        }
+        if (drinkService.checkIfDrinkNameAlreadyInDb(name)) {
+            model.addAttribute("nameTakenError", "Drink with this name already exists");
             return "/form/addNewDrink.jsp";
         }
         if (existingAlcoholIds==null&&existingFillIds==null&&newAlcoholName==null&&newFillName==null) {
@@ -238,12 +242,6 @@ public class DrinkController {
                 return "/form/editDrink.jsp";
             }
         }
-        if (drinkService.checkIfDrinkNameAlreadyInDb(name)) {
-            model.addAttribute("nameTakenError", "Drink with this name already exists");
-            return "/form/addNewDrink.jsp";
-        }
-
-
         DrinkRequestDTO drinkRequestDTO = new DrinkRequestDTO(
                 name,
                 method,
@@ -321,7 +319,7 @@ public class DrinkController {
         if (newFillName!=null) {
             newFillIngredients = drinkService.castingNewFillIngredients(newFillName, newFillAmount);
         }
-        if (name.length()<3) {
+        if (name.length()<3||name==null) {
             model.addAttribute("nameError", "Name of your drink should be at least 3 characters long");
             return "/form/editDrink.jsp";
         }
