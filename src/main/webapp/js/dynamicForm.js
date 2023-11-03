@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', event => {
         $("#addIngredient").click(function () {
             const newField = `
                     <div class="ingredientField">
-                       <input name="newFillName" id="newFillName" placeholder="Type in ingredient"/>
+                        <input name="newFillName" id="newFillName" placeholder="Type in ingredient"/>
                         <input name="newFillAmount" id="newFillAmount" placeholder="Amount of ingredient"/>
                         <button class="btn btn-danger btn-sm remove" type="button">Delete this entry</button>
                     </div>

@@ -103,8 +103,10 @@
                 <div class="row"><h5><a class="align-middle align-items-center" href="/list/drink/${drink.id}">${drink.name}</a></h5>
                 </div>
               <c:choose>
-                <c:when test="${not empty imageUrl}">
-                        <div class="row"><img class="scaled-image" src="${imageUrl}"></div>
+                  <c:when test="${not empty imageUrl}">
+                    <div class="container2 align-items-center">
+                    <div class="row"><img class="scaled-image" src="${imageUrl}"></div>
+                    </div>
                 </c:when>
                 <c:otherwise>
                         <div class="row"><img class="scaled-image" src="/images/no"></div>
@@ -123,7 +125,9 @@
               <br>
               <c:choose>
                 <c:when test="${not empty imageUrl}">
+                  <div class="container2 align-items-center">
                   <div class="row"><img class="scaled-image" src="${imageUrl}"></div>
+                  </div>
                 </c:when>
                 <c:otherwise>
                   <div class="row"><img class="scaled-image" src="/images/no"></div>
@@ -143,7 +147,9 @@
                 <br>
                 <c:choose>
                   <c:when test="${not empty imageUrl}">
+                    <div class="container2 align-items-center">
                     <div class="row"><img class="scaled-image" src="${imageUrl}"></div>
+                    </div>
                   </c:when>
                   <c:otherwise>
                     <div class="row"><img class="scaled-image" src="/images/no"></div>

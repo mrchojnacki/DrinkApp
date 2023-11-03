@@ -101,9 +101,11 @@ public class UserService {
     public String passwordFromCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         String password = null;
-        for(Cookie c : cookies) {
-            if (c.getName().equals("password")) {
-                password = c.getValue();
+        if (cookies!=null) {
+            for (Cookie c : cookies) {
+                if (c.getName().equals("password")) {
+                    password = c.getValue();
+                }
             }
         }
         return password;
