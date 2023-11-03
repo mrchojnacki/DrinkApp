@@ -13,7 +13,7 @@
             <property name="javax.persistence.sql-load-script-source"
                       value="sql/data.sql" />
             <property name="javax.persistence.schema-generation.database.action"
-                      value="none"/>
+                      value="create"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>

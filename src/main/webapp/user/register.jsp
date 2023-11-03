@@ -30,7 +30,7 @@
                       <div class="form-floating mb-3 mb-md-0">
                         <form:input class="form-control" path="userName"  placeholder="Enter your user name" />
                         <div class="text-danger"><form:errors path="userName"/></div>
-                        <c:if test="#{userNameTaken!=null}">
+                        <c:if test="${userNameTaken!=null}">
                           <div class="text-danger">${userNameTaken}</div>
                         </c:if>
                         <form:label path="userName">User Name</form:label>

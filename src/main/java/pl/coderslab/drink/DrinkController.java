@@ -223,13 +223,19 @@ public class DrinkController {
             return "/form/addNewDrink.jsp";
         }
         if (existingAlcoholIds==null&&existingFillIds==null&&newAlcoholName==null&&newFillName==null) {
-            if (newAlcoholName.length!=newAlcoholVolume.length || newFillName.length!=newFillAmount.length) {
+            model.addAttribute("noIngredientsError", "Add at least one ingredient");
+            return "/form/addNewDrink.jsp";
+        }
+        if (newAlcoholName!=null&&newAlcoholVolume!=null) {
+            if (newAlcoholName.length != newAlcoholVolume.length) {
                 model.addAttribute("nonInPairIngredientInputAmountError", "Make sure you have paired all new ingredients with their quantities");
-                return "/form/addNewDrink.jsp";
+                return "/form/editDrink.jsp";
             }
-            if (existingAlcoholIds.length==0&&existingFillIds.length==0&&newAlcoholName.length==0&&newFillName.length==0) {
-                model.addAttribute("noIngredientsError", "Add at least one ingredient");
-                return "/form/addNewDrink.jsp";
+        }
+        if (newFillAmount!=null&&newFillName!=null) {
+            if(newFillName.length != newFillAmount.length) {
+                model.addAttribute("nonInPairIngredientInputAmountError", "Make sure you have paired all new ingredients with their quantities");
+                return "/form/editDrink.jsp";
             }
         }
         if (drinkService.checkIfDrinkNameAlreadyInDb(name)) {
@@ -324,14 +330,20 @@ public class DrinkController {
             return "/form/editDrink.jsp";
         }
         if (existingAlcoholIds==null&&existingFillIds==null&&newAlcoholName==null&&newFillName==null) {
-            if (newAlcoholName.length!=newAlcoholVolume.length || newFillName.length!=newFillAmount.length) {
+            model.addAttribute("noIngredientsError", "Add at least one ingredient");
+            return "/form/addNewDrink.jsp";
+        }
+        if (newAlcoholName!=null&&newAlcoholVolume!=null) {
+            if (newAlcoholName.length != newAlcoholVolume.length) {
                 model.addAttribute("nonInPairIngredientInputAmountError", "Make sure you have paired all new ingredients with their quantities");
                 return "/form/editDrink.jsp";
             }
-            if (existingAlcoholIds.length==0&&existingFillIds.length==0&&newAlcoholName.length==0&&newFillName.length==0) {
-                model.addAttribute("noIngredientsError", "Add at least one ingredient");
-                return "/form/addNewDrink.jsp";
-            }
+        }
+        if (newFillAmount!=null&&newFillName!=null) {
+             if(newFillName.length != newFillAmount.length) {
+                 model.addAttribute("nonInPairIngredientInputAmountError", "Make sure you have paired all new ingredients with their quantities");
+                 return "/form/editDrink.jsp";
+             }
         }
         DrinkRequestDTO drinkRequestDTO = new DrinkRequestDTO(
                 name,
