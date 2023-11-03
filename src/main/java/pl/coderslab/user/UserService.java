@@ -125,6 +125,14 @@ public class UserService {
         return loggedSuccessfully;
     }
 
+    public boolean userNameTaken (String userName) {
+        return userRepository.findUserByUsername(userName)!=null;
+    }
+
+    public boolean emailTaken (String email) {
+        return userRepository.findUserByEmail(email)!=null;
+    }
+
     public void logout(HttpSession sess) {
         sess.removeAttribute("isLogged");
         sess.removeAttribute("authenticatedUserId");

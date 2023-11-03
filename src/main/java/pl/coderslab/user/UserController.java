@@ -55,6 +55,14 @@ public class UserController {
                                       BindingResult result,
                                       Model model,
                                       HttpServletResponse response) {
+        if (userService.userNameTaken(userRegisterDTO.getUserName())) {
+            model.addAttribute("userNameTaken", "This user name is already taken");
+            return "/user/register.jsp";
+        }
+        if (userService.emailTaken(userRegisterDTO.getEmail())) {
+            model.addAttribute("emailTaken", "This email is already taken");
+            return "/user/register.jsp";
+        }
         if (!userService.checkIfPasswordConfirmed(userRegisterDTO)) {
             model.addAttribute("registerError", "Password confirmation has failed, try again");
             return "/user/register.jsp";

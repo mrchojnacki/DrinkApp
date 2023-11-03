@@ -151,8 +151,8 @@
                 </c:choose>
               </div>
             </div>
+            </div>
           </c:forEach>
-        </div>
       </div>
       </div>
     </div>

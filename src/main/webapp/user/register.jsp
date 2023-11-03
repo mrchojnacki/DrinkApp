@@ -30,6 +30,9 @@
                       <div class="form-floating mb-3 mb-md-0">
                         <form:input class="form-control" path="userName"  placeholder="Enter your user name" />
                         <div class="text-danger"><form:errors path="userName"/></div>
+                        <c:if test="#{userNameTaken!=null}">
+                          <div class="text-danger">${userNameTaken}</div>
+                        </c:if>
                         <form:label path="userName">User Name</form:label>
                       </div>
                     </div>
@@ -37,6 +40,9 @@
                   <div class="form-floating mb-3">
                     <form:input class="form-control" path="email" type="email" placeholder="name@example.com" />
                     <div class="text-danger"><form:errors path="email"/></div>
+                    <c:if test="${emailTaken!=null}">
+                      <div class="text-danger">${emailTaken}</div>
+                    </c:if>
                     <form:label path="email">Email address</form:label>
                   </div>
                   <div class="row mb-3">
