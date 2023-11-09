@@ -101,6 +101,7 @@
                     </div>
                 </div>
                 </div>
+                    <c:if test="${isLogged==true}">
                     <div class="col-xl-1">
                         <form action="/toggleToFavorites" method="post">
                             <input type="hidden" name="drinkId" value="${drinkId}">
@@ -114,6 +115,7 @@
                             </c:choose>
                         </form>
                     </div>
+                    </c:if>
                     <c:if test="${isUserMade}">
                         <div class="col-xl-2">
                             <a href="/editDrink/${drink.id}">
